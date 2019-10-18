@@ -1,0 +1,54 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTableStead extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('fias_stead', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->uuid('steadguid');
+            $table->string('number', 120)->nullable();
+            $table->string('regioncode', 2);
+            $table->string('postalcode', 6)->nullable();
+            $table->string('ifnsfl', 4)->nullable();
+            $table->string('terrifnsfl', 4)->nullable();
+            $table->string('ifnsul', 4)->nullable();
+            $table->string('terrifnsul', 4)->nullable();
+            $table->string('okato', 11)->nullable();
+            $table->string('oktmo', 11)->nullable();
+            $table->date('updatedate');
+            $table->uuid('parentguid')->nullable();
+            $table->uuid('steadid');
+            $table->uuid('previd')->nullable();
+            $table->uuid('nextid')->nullable();
+            $table->integer('operstatus');
+            $table->date('startdate');
+            $table->date('enddate');
+            $table->uuid('normdoc')->nullable();
+            $table->enum('livestatus', [0, 1]);
+            $table->string('cadnum', 100)->nullable();
+            $table->enum('divtype', [0, 1, 2]);
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('fias_stead');
+    }
+}

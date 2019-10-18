@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTableAddressObjectType extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('fias_address_object_type', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('level');
+            $table->string('scname', 10)->nullable();
+            $table->string('socrname', 50);
+            $table->string('kod_t_st', 4);
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('fias_address_object_type');
+    }
+}

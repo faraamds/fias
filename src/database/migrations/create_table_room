@@ -1,0 +1,51 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTableRoom extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('fias_room', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->uuid('roomguid');
+            $table->string('flatnumber', 50);
+            $table->integer('flattype');
+            $table->string('roomnumber', 50)->nullable();
+            $table->integer('roomtype')->nullable();
+            $table->string('regioncode', 2);
+            $table->string('postalcode', 6)->nullable();
+            $table->date('updatedate');
+            $table->uuid('houseguid');
+            $table->uuid('roomid');
+            $table->uuid('previd')->nullable();
+            $table->uuid('nextid')->nullable();
+            $table->date('startdate');
+            $table->date('enddate');
+            $table->enum('livestatus', [0, 1]);
+            $table->uuid('normdoc')->nullable();
+            $table->integer('operstatus');
+            $table->string('cadnum', 100)->nullable();
+            $table->string('roomcadnum', 100)->nullable();
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('fias_room');
+    }
+}

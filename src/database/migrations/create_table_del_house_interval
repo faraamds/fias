@@ -1,0 +1,50 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTableDelHouseInterval extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('fias_del_house_interval', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('postalcode', 6)->nullable();
+            $table->string('ifnsfl', 4)->nullable();
+            $table->string('terrifnsfl', 4)->nullable();
+            $table->string('ifnsul', 4)->nullable();
+            $table->string('terrifnsul', 4)->nullable();
+            $table->string('okato', 11)->nullable();
+            $table->string('oktmo', 11)->nullable();
+            $table->date('updatedate');
+            $table->integer('intstart');
+            $table->integer('intend');
+            $table->uuid('houseintid');
+            $table->uuid('intguid');
+            $table->uuid('aoguid');
+            $table->date('startdate');
+            $table->date('enddate');
+            $table->integer('intstatus');
+            $table->uuid('normdoc')->nullable();
+            $table->integer('counter');
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('fias_del_house_interval');
+    }
+}

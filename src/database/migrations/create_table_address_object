@@ -1,0 +1,71 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTableAddressObject extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('fias_address_object', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('position')->default(0);
+            $table->uuid('aoguid');
+            $table->string('formalname', 120);
+            $table->string('regioncode', 2);
+            $table->string('autocode', 1);
+            $table->string('areacode', 3);
+            $table->string('citycode', 3);
+            $table->string('ctarcode', 3);
+            $table->string('placecode', 3);
+            $table->string('plancode', 4);
+            $table->string('streetcode', 4)->nullable();
+            $table->string('extrcode', 4);
+            $table->string('sextcode', 3);
+            $table->string('offname', 120)->nullable();
+            $table->string('postalcode', 6)->nullable();
+            $table->string('ifnsfl', 4)->nullable();
+            $table->string('terrifnsfl', 4)->nullable();
+            $table->string('ifnsul', 4)->nullable();
+            $table->string('terrifnsul', 4)->nullable();
+            $table->string('okato', 11)->nullable();
+            $table->string('oktmo', 11)->nullable();
+            $table->date('updatedate');
+            $table->string('shortname', 10);
+            $table->integer('aolevel');
+            $table->uuid('parentguid')->nullable();
+            $table->uuid('aoid');
+            $table->uuid('previd')->nullable();
+            $table->uuid('nextid')->nullable();
+            $table->string('code', 17)->nullable();
+            $table->string('plaincode', 15)->nullable();
+            $table->integer('actstatus');
+            $table->integer('centstatus');
+            $table->integer('operstatus');
+            $table->integer('currstatus');
+            $table->date('startdate');
+            $table->date('enddate');
+            $table->uuid('normdoc')->nullable();
+            $table->enum('livestatus', [0, 1]);
+            $table->enum('divtype', [0, 1, 2]);
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('fias_address_object');
+    }
+}

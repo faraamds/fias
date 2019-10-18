@@ -1,0 +1,33 @@
+{
+  "name": "faraamds/fias",
+  "description": "...",
+  "prefer-stable": true,
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "type": "library",
+  "require": {
+    "php": ">=7.2",
+    "laravelcollective/html": ">=5.8"
+  },
+  "authors": [
+    {
+      "name": "Andrey Rasskazov",
+      "email": "arasskazov512@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "faraamds\\fias\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "faraamds\\fias\\Providers\\FiasServiceProvider"
+      ],
+      "aliases": {
+        "Fias": "faraamds\\fias\\Facades\\Fias"
+      }
+    }
+  }
+}

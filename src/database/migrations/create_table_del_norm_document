@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTableDelNormDocument extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('fias_del_norm_document', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->uuid('normdocid');
+            $table->text('docname')->nullable();
+            $table->date('docdate')->nullable();
+            $table->string('docnum', 20)->nullable();
+            $table->integer('doctype');
+            $table->uuid('docimgid')->nullable();
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('fias_del_norm_document');
+    }
+}

@@ -1,0 +1,54 @@
+<?php
+namespace faraamds\fias\Providers;
+
+use faraamds\fias\Classes\Fias;
+use Illuminate\Support\ServiceProvider;
+use faraamds\fias\Console\Commands\MakeMigrations;
+
+/**
+ * Fias service provider
+ *
+ * @package faraamds\fias
+ */
+class FiasServiceProvider extends ServiceProvider
+{
+
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->bind('fias.fias', function () {
+            return new Fias();
+        });
+
+        // Here we register commands for artisan
+        $this->app->singleton('command.make-migrations', function ($app) {
+            return $app->make(MakeMigrations::class);
+        });
+
+        $this->commands('command.make-migrations');
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [];
+    }
+
+}
