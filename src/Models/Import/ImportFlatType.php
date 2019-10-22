@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\FlatType;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportFlatType extends FlatType
+class ImportFlatType extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_FLATTYPE_';
 
     protected $xml_object_tag_name = 'FlatType';
@@ -26,4 +25,11 @@ class ImportFlatType extends FlatType
 
     protected $fias_key_field = 'fltypeid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new FlatType;
+    }
 }

@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\HouseStateStatus;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportHouseStateStatus extends HouseStateStatus
+class ImportHouseStateStatus extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_HSTSTAT_';
 
     protected $xml_object_tag_name = 'HouseStateStatus';
@@ -25,4 +24,11 @@ class ImportHouseStateStatus extends HouseStateStatus
 
     protected $fias_key_field = 'housestid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new HouseStateStatus;
+    }
 }

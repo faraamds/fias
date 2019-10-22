@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\AddressObjectType;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportAddressObjectType extends AddressObjectType
+class ImportAddressObjectType extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_SOCRBASE_';
 
     protected $xml_object_tag_name = 'AddressObjectType';
@@ -27,4 +26,11 @@ class ImportAddressObjectType extends AddressObjectType
 
     protected $fias_key_field = 'kod_t_st';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+       return new AddressObjectType;
+    }
 }

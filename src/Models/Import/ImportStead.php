@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\Stead;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportStead extends Stead
+class ImportStead extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_STEAD_';
 
     protected $xml_object_tag_name = 'Stead';
@@ -45,4 +44,11 @@ class ImportStead extends Stead
 
     protected $fias_key_field = 'steadid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new Stead;
+    }
 }

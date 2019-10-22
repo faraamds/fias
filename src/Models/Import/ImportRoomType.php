@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\RoomType;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportRoomType extends RoomType
+class ImportRoomType extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_ROOMTYPE_';
 
     protected $xml_object_tag_name = 'RoomType';
@@ -26,4 +25,11 @@ class ImportRoomType extends RoomType
 
     protected $fias_key_field = 'rmtypeid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new RoomType;
+    }
 }

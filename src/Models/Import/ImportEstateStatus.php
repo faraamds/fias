@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\EstateStatus;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportEstateStatus extends EstateStatus
+class ImportEstateStatus extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_ESTSTAT_';
 
     protected $xml_object_tag_name = 'EstateStatus';
@@ -26,4 +25,11 @@ class ImportEstateStatus extends EstateStatus
 
     protected $fias_key_field = 'eststatid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new EstateStatus;
+    }
 }

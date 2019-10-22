@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\DelHouse;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportDelHouse extends DelHouse
+class ImportDelHouse extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_DEL_HOUSE_';
 
     protected $xml_object_tag_name = 'House';
@@ -46,4 +45,11 @@ class ImportDelHouse extends DelHouse
 
     protected $fias_key_field = 'houseid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new DelHouse;
+    }
 }

@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\HouseInterval;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportHouseInterval extends HouseInterval
+class ImportHouseInterval extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_HOUSEINT_';
 
     protected $xml_object_tag_name = 'HouseInterval';
@@ -41,4 +40,11 @@ class ImportHouseInterval extends HouseInterval
 
     protected $fias_key_field = 'houseintid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new HouseInterval;
+    }
 }

@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\CurrentStatus;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportCurrentStatus extends CurrentStatus
+class ImportCurrentStatus extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_CURENTST_';
 
     protected $xml_object_tag_name = 'CurrentStatus';
@@ -25,4 +24,11 @@ class ImportCurrentStatus extends CurrentStatus
 
     protected $fias_key_field = 'curentstid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new CurrentStatus;
+    }
 }

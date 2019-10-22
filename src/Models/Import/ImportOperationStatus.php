@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\OperationStatus;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportOperationStatus extends OperationStatus
+class ImportOperationStatus extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_OPERSTAT_';
 
     protected $xml_object_tag_name = 'OperationStatus';
@@ -25,4 +24,11 @@ class ImportOperationStatus extends OperationStatus
 
     protected $fias_key_field = 'operstatid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new OperationStatus;
+    }
 }

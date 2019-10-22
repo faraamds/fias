@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\IntervalStatus;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportIntervalStatus extends IntervalStatus
+class ImportIntervalStatus extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_INTVSTAT_';
 
     protected $xml_object_tag_name = 'IntervalStatus';
@@ -25,4 +24,11 @@ class ImportIntervalStatus extends IntervalStatus
 
     protected $fias_key_field = 'intvstatid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new IntervalStatus;
+    }
 }

@@ -4,13 +4,12 @@
 namespace faraamds\fias\Models\Import;
 
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use faraamds\fias\Models\AddressObject;
 
-class ImportAddressObject extends AddressObject
+class ImportAddressObject extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_ADDROBJ_';
 
     protected $xml_object_tag_name = 'Object';
@@ -68,5 +67,13 @@ class ImportAddressObject extends AddressObject
 
             DB::unprepared('CREATE INDEX idx_gin_fias_address_object ON fias_address_object USING gin (to_tsvector(\'russian\', formalname))');
         }
+    }
+
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new AddressObject;
     }
 }

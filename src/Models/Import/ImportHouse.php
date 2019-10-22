@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\House;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportHouse extends House
+class ImportHouse extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_HOUSE_';
 
     protected $xml_object_tag_name = 'House';
@@ -47,4 +46,11 @@ class ImportHouse extends House
 
     protected $fias_key_field = 'houseid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new House;
+    }
 }

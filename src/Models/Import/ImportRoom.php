@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\Room;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportRoom extends Room
+class ImportRoom extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_ROOM_';
 
     protected $xml_object_tag_name = 'Room';
@@ -42,4 +41,11 @@ class ImportRoom extends Room
 
     protected $fias_key_field = 'roomid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new Room;
+    }
 }

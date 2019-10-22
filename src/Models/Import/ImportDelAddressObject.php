@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\DelAddressObject;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportDelAddressObject extends DelAddressObject
+class ImportDelAddressObject extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_DEL_ADDROBJ_';
 
     protected $xml_object_tag_name = 'Object';
@@ -60,4 +59,11 @@ class ImportDelAddressObject extends DelAddressObject
 
     protected $fias_key_field = 'aoid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject() : Model
+    {
+        return new DelAddressObject;
+    }
 }

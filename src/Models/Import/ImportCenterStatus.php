@@ -6,11 +6,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\CenterStatus;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportCenterStatus extends CenterStatus
+class ImportCenterStatus extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_CENTERST_';
 
     protected $xml_object_tag_name = 'CenterStatus';
@@ -26,4 +25,11 @@ class ImportCenterStatus extends CenterStatus
 
     protected $fias_key_field = 'centerstid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new CenterStatus;
+    }
 }

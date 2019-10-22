@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\NormDocumentType;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportNormDocumentType extends NormDocumentType
+class ImportNormDocumentType extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_NDOCTYPE_';
 
     protected $xml_object_tag_name = 'NormativeDocumentType';
@@ -25,4 +24,11 @@ class ImportNormDocumentType extends NormDocumentType
 
     protected $fias_key_field = 'ndtypeid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new NormDocumentType;
+    }
 }

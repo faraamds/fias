@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\NormDocument;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportNormDocument extends NormDocument
+class ImportNormDocument extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_NORMDOC_';
 
     protected $xml_object_tag_name = 'NormativeDocument';
@@ -29,4 +28,11 @@ class ImportNormDocument extends NormDocument
 
     protected $fias_key_field = 'normdocid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new NormDocument;
+    }
 }

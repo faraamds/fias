@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\StructureStatus;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportStructureStatus extends StructureStatus
+class ImportStructureStatus extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_STRSTAT_';
 
     protected $xml_object_tag_name = 'StructureStatus';
@@ -26,4 +25,11 @@ class ImportStructureStatus extends StructureStatus
 
     protected $fias_key_field = 'strstatid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new StructureStatus;
+    }
 }

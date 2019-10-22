@@ -5,11 +5,10 @@ namespace faraamds\fias\Models\Import;
 
 
 use faraamds\fias\Models\Landmark;
+use Illuminate\Database\Eloquent\Model;
 
-class ImportLandmark extends Landmark
+class ImportLandmark extends FiasImport
 {
-    use CommonXMLImport, CommonXMLUpdate;
-
     protected $xml_file_prefix = 'AS_LANDMARK_';
 
     protected $xml_object_tag_name = 'Landmark';
@@ -38,4 +37,11 @@ class ImportLandmark extends Landmark
 
     protected $fias_key_field = 'landid';
 
+    /**
+     * @return Model
+     */
+    protected function getModelObject(): Model
+    {
+        return new Landmark;
+    }
 }
