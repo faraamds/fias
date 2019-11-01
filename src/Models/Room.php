@@ -7,6 +7,19 @@ namespace faraamds\fias\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class Room
+ * @property-read int $id
+ * @property-read string $flatnumber
+ * @property-read string $roomnumber
+ * @property-read string $houseguid
+ * @property-read string $roomguid
+ * @property-read string $roomid
+ * @property-read string $previd
+ * @property-read string $nextid
+ *
+ * @package faraamds\fias\Models
+ */
 class Room extends Model
 {
     protected $table = 'fias_room';

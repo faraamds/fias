@@ -33,29 +33,29 @@ class ImportFromXML
 {
     public static function run(string $path = null)
     {
-//        ImportDelNormDocument::import($path);
-//        ImportNormDocument::import($path);
-//
-//        ImportActualStatus::import($path);
-//        ImportAddressObjectType::import($path);
-//        ImportCenterStatus::import($path);
-//        ImportCurrentStatus::import($path);
-//        ImportEstateStatus::import($path);
-//        ImportFlatType::import($path);
-//        ImportHouseStateStatus::import($path);
-//        ImportIntervalStatus::import($path);
-//        ImportNormDocumentType::import($path);
-//        ImportOperationStatus::import($path);
-//        ImportRoomType::import($path);
-//        ImportStructureStatus::import($path);
-//
-//        ImportDelAddressObject::import($path);
-//        ImportDelHouse::import($path);
-//        ImportDelHouseInterval::import($path);
-//        ImportDelLandmark::import($path);
-//
-//        ImportAddressObject::import($path);
-//        ImportHouse::import($path);
+        ImportDelNormDocument::import($path);
+        ImportNormDocument::import($path);
+
+        ImportActualStatus::import($path);
+        ImportAddressObjectType::import($path);
+        ImportCenterStatus::import($path);
+        ImportCurrentStatus::import($path);
+        ImportEstateStatus::import($path);
+        ImportFlatType::import($path);
+        ImportHouseStateStatus::import($path);
+        ImportIntervalStatus::import($path);
+        ImportNormDocumentType::import($path);
+        ImportOperationStatus::import($path);
+        ImportRoomType::import($path);
+        ImportStructureStatus::import($path);
+
+        ImportDelAddressObject::import($path);
+        ImportDelHouse::import($path);
+        ImportDelHouseInterval::import($path);
+        ImportDelLandmark::import($path);
+
+        ImportAddressObject::import($path);
+        ImportHouse::import($path);
         ImportHouseInterval::import($path);
         ImportLandmark::import($path);
         ImportRoom::import($path);

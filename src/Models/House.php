@@ -8,6 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Class House
+ * @property-read int $id
+ * @property-read string $housenum
+ * @property-read string $buildnum
+ * @property-read string $strucnum
+ * @property-read string $aoguid
+ * @property-read string $houseguid
+ * @property-read string $houseid
+ *
+ * @package faraamds\fias\Models
+ */
 class House extends Model
 {
     protected $table = 'fias_house';

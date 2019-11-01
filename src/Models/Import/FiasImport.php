@@ -5,8 +5,9 @@ namespace faraamds\fias\Models\Import;
 
 
 use Carbon\Carbon;
-use faraamds\fias\Exceptions\ImportFileNotFoundException;
-use faraamds\fias\Exceptions\XmlModelNotFoundException;
+use faraamds\fias\Exceptions\FiasImportFileNotFoundException;
+use faraamds\fias\Exceptions\FiasImportTooManyFilesException;
+use faraamds\fias\Exceptions\FiasXmlModelNotFoundException;
 use faraamds\fias\Models\ImportFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
@@ -39,8 +40,11 @@ abstract class FiasImport
     /** @var XMLReader */
     protected $xmlReader;
 
+    /** @var array */
+    protected $import_files;
+
     /** @var string */
-    protected $import_file_name;
+    protected $current_file_name;
 
     /** @var string */
     protected $path;
@@ -70,7 +74,11 @@ abstract class FiasImport
      */
     protected function process_import(string $path=null) : void
     {
-        $this->findFile($path);
+        $this->findFiles($path);
+        if (count($this->import_files) > 1) {
+            throw new FiasImportTooManyFilesException('Too many files for import. Must be only one.');
+        }
+        $this->current_file_name = Arr::first($this->import_files);
         $this->initXmlReader();
 
         DB::table($this->getTable())->truncate();
@@ -99,35 +107,41 @@ abstract class FiasImport
     protected function process_update(string $path=null) : void
     {
 
-        $this->findFile($path);
-        $this->initXmlReader();
+        $this->findFiles($path);
+        array_walk($this->import_files, function ($file) {
+            $this->current_file_name = $file;
+            $this->initXmlReader();
 
-        while ($this->hasMoreModels())
-        {
-            $rows = $this->getArrayOfRowsAndRewindToNext();
+            while ($this->hasMoreModels()) {
+                $rows = $this->getArrayOfRowsAndRewindToNext();
 
-            DB::table($this->getTable())->updateOrInsert([$this->fias_key_field => $rows[$this->fias_key_field]], $rows);
-        }
+                DB::table($this->getTable())->updateOrInsert([$this->fias_key_field => $rows[$this->fias_key_field]], $rows);
+            }
 
-        $this->writeFilename();
+            $this->writeFilename();
+        });
     }
 
     /**
      * @param string|null $path
      */
-    protected function findFile(string $path = null) : void
+    protected function findFiles(string $path = null) : void
     {
         $this->path = $path ?: 'import';
         $filename = $this->xml_file_prefix;
         $files = glob(storage_path( $this->path . DIRECTORY_SEPARATOR . "{$filename}*"));
 
-        $this->import_file_name = Arr::first($files);
+        $files = Arr::sort(array_filter($files, function ($file_name) {
+            return ! ImportFile::where('filename', pathinfo($file_name, PATHINFO_BASENAME))->exists();
+        }));
+
+        $this->import_files = $files;
     }
 
     protected function initXmlReader(): void
     {
-        if (!$this->import_file_name) {
-            throw new ImportFileNotFoundException("Import file with prefix {$this->xml_file_prefix} not found in {$this->path}");
+        if (!$this->current_file_name) {
+            throw new FiasImportFileNotFoundException("Import file with prefix {$this->xml_file_prefix} not found in {$this->path}");
         }
 
         $this->createXmlReader();
@@ -142,7 +156,7 @@ abstract class FiasImport
 
     protected function openXmlFile() : void
     {
-        $this->xmlReader->open($this->import_file_name);
+        $this->xmlReader->open($this->current_file_name);
     }
 
     protected function rewindCursorToFirstModel() : void
@@ -150,7 +164,7 @@ abstract class FiasImport
         $i = 0;
         while ($this->xmlReader->read() && $this->xmlReader->name !== $this->xml_object_tag_name) {
             if ($i++ > 10) {
-                throw new XmlModelNotFoundException("Element {$this->xml_object_tag_name} not found in {$this->import_file_name} after 10 iterations");
+                throw new FiasXmlModelNotFoundException("Element {$this->xml_object_tag_name} not found in {$this->current_file_name} after 10 iterations");
             }
         }
     }
@@ -204,7 +218,7 @@ abstract class FiasImport
     {
         ImportFile::create([
             'timestamp' => Carbon::now(),
-            'filename' => pathinfo($this->import_file_name, PATHINFO_BASENAME),
+            'filename' => pathinfo($this->current_file_name, PATHINFO_BASENAME),
         ]);
     }
 

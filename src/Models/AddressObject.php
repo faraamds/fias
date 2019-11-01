@@ -10,6 +10,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class AddressObject
+ * @property-read int $id
+ * @property-read string $formalname
+ * @property-read string $aoguid
+ * @property-read string $aoid
+ * @property-read string $previd
+ * @property-read string $nextid
+ *
+ * @package faraamds\fias\Models
+ */
 class AddressObject extends Model
 {
     protected $table = 'fias_address_object';
