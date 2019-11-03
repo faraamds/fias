@@ -35,12 +35,12 @@ class Search
     public static function byAddress(string $address, string $house = null, string $building = null, string $structure = null, string $apartment = null, string $region = null)
     {
         $best_candidate = null;
-        $addresses = DB::select('SELECT * FROM fias_address_search(?, ?)', [static::createTsQuery($address), $region]);
+        $addresses = DB::select('SELECT * FROM fias_address_search_2(?, ?)', [static::createTsQuery($address), $region]);
 
         $best = Arr::first($addresses);
 
         if ($best) {
-            $best_candidate = (new BestCandidateResult())->fill($best->target_aoguid, $house, $building, $structure, $apartment)->toJson();
+            $best_candidate = (new BestCandidateResult())->fill($best->aoguid, $house, $building, $structure, $apartment)->toJson();
         }
 
         return compact('addresses', 'best_candidate');
@@ -61,12 +61,14 @@ class Search
      */
     protected static function createTsQuery(string $query) : string
     {
-        $keywords = preg_split('/\s*,\s*/', $query);
-
-        return implode(' | ', array_map(function ($item) {
-
-            return preg_replace('/\s+/', ' & ', trim($item));
-
-        }, $keywords));
+        return $query;
+//        return preg_replace('/\s+/', ' & ', trim($query));
+//        $keywords = preg_split('/\s*,\s*/', $query);
+//
+//        return implode(' | ', array_map(function ($item) {
+//
+//            return preg_replace('/\s+/', ' & ', trim($item));
+//
+//        }, $keywords));
     }
 }

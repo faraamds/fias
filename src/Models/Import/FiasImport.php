@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use faraamds\fias\Exceptions\FiasImportFileNotFoundException;
 use faraamds\fias\Exceptions\FiasImportTooManyFilesException;
 use faraamds\fias\Exceptions\FiasXmlModelNotFoundException;
-use faraamds\fias\Models\ImportFile;
+use faraamds\fias\Models\ImportedFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Arr;
@@ -132,7 +132,7 @@ abstract class FiasImport
         $files = glob(storage_path( $this->path . DIRECTORY_SEPARATOR . "{$filename}*"));
 
         $files = Arr::sort(array_filter($files, function ($file_name) {
-            return ! ImportFile::where('filename', pathinfo($file_name, PATHINFO_BASENAME))->exists();
+            return ! ImportedFile::where('filename', pathinfo($file_name, PATHINFO_BASENAME))->exists();
         }));
 
         $this->import_files = $files;
@@ -216,7 +216,7 @@ abstract class FiasImport
 
     protected function writeFilename() : void
     {
-        ImportFile::create([
+        ImportedFile::create([
             'timestamp' => Carbon::now(),
             'filename' => pathinfo($this->current_file_name, PATHINFO_BASENAME),
         ]);
