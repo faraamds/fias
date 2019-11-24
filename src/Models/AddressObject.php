@@ -152,4 +152,12 @@ class AddressObject extends Model
         return $this->hasMany(House::class, 'aoguid', 'aoguid')
             ->where('is_last', true);
     }
+
+    /**
+     * @return array
+     */
+    public static function getAvailShortnames(): array
+    {
+        return self::select('shortname')->distinct()->get()->toArray();
+    }
 }
