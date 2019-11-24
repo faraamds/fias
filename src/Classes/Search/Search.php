@@ -35,12 +35,12 @@ class Search
     public static function byAddress(string $address, string $house = null, string $building = null, string $structure = null, string $apartment = null, string $region = null)
     {
         $best_candidate = null;
-        $addresses = DB::select('SELECT * FROM fias_address_search_2(?, ?)', [static::createTsQuery($address), $region]);
+        $addresses = DB::select('SELECT * FROM fias_address_search_2_shortest(?, ?)', [static::createTsQuery($address), $region]);
 
         $best = Arr::first($addresses);
 
         if ($best) {
-            $best_candidate = (new BestCandidateResult())->fill($best->aoguid, $house, $building, $structure, $apartment)->toJson();
+            $best_candidate = (new SearchAddressResult())->fill($best->aoguid, $house, $building, $structure, $apartment)->toJson();
         }
 
         return compact('addresses', 'best_candidate');

@@ -9,7 +9,7 @@ use faraamds\fias\Models\House;
 use faraamds\fias\Models\Room;
 use Illuminate\Database\Eloquent\Builder;
 
-class BestCandidateResult
+class SearchAddressResult
 {
     /** @var AddressObject */
     protected $addressObject;
@@ -28,7 +28,7 @@ class BestCandidateResult
      * @param string|null $room
      * @param string|null $aoid
      *
-     * @return BestCandidateResult
+     * @return SearchAddressResult
      */
     public function fill(string $aoguid, string $house, string $building = null, string $stucture = null, string $room = null, string $aoid = null) : self
     {
