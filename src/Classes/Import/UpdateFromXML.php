@@ -38,37 +38,37 @@ use faraamds\fias\Models\Import\ImportStructureStatus;
 use faraamds\fias\Models\Landmark;
 use Illuminate\Support\Facades\DB;
 
-class ImportFromXML
+class UpdateFromXML
 {
     public static function run(string $path = null)
     {
-        ImportDelNormDocument::import($path);
-        ImportNormDocument::import($path);
+        ImportDelNormDocument::update($path);
+        ImportNormDocument::update($path);
 
-        ImportActualStatus::import($path);
-        ImportAddressObjectType::import($path);
-        ImportCenterStatus::import($path);
-        ImportCurrentStatus::import($path);
-        ImportEstateStatus::import($path);
-        ImportFlatType::import($path);
-        ImportHouseStateStatus::import($path);
-        ImportIntervalStatus::import($path);
-        ImportNormDocumentType::import($path);
-        ImportOperationStatus::import($path);
-        ImportRoomType::import($path);
-        ImportStructureStatus::import($path);
+        ImportActualStatus::update($path);
+        ImportAddressObjectType::update($path);
+        ImportCenterStatus::update($path);
+        ImportCurrentStatus::update($path);
+        ImportEstateStatus::update($path);
+        ImportFlatType::update($path);
+        ImportHouseStateStatus::update($path);
+        ImportIntervalStatus::update($path);
+        ImportNormDocumentType::update($path);
+        ImportOperationStatus::update($path);
+        ImportRoomType::update($path);
+        ImportStructureStatus::update($path);
 
-        ImportDelAddressObject::import($path);
-        ImportDelHouse::import($path);
-        ImportDelHouseInterval::import($path);
-        ImportDelLandmark::import($path);
+        ImportDelAddressObject::update($path);
+        ImportDelHouse::update($path);
+        ImportDelHouseInterval::update($path);
+        ImportDelLandmark::update($path);
 
-        ImportAddressObject::import($path);
-        ImportHouse::import($path);
-        ImportHouseInterval::import($path);
-        ImportLandmark::import($path);
-        ImportRoom::import($path);
-        ImportStead::import($path);
+        ImportAddressObject::update($path);
+        ImportHouse::update($path);
+        ImportHouseInterval::update($path);
+        ImportLandmark::update($path);
+        ImportRoom::update($path);
+        ImportStead::update($path);
 
         AddressObject::whereRaw('aoid IN (' . DelAddressObject::select('aoid')->toSql() . ')')->delete();
         House::whereRaw('houseid IN (' . DelHouse::select('houseid')->toSql() . ')')->delete();

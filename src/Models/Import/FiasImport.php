@@ -59,7 +59,7 @@ abstract class FiasImport
         (new static())->process_import($path);
     }
 
-    public static function update_table(string $path=null) : void
+    public static function update(string $path=null) : void
     {
         (new static())->process_update($path);
     }

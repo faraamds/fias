@@ -8,6 +8,11 @@ DECLARE
 
 BEGIN
 
+    TRUNCATE TABLE fias_address_object_help_search;
+    DROP INDEX idnx_fias_address_object_help_search_address;
+    DROP INDEX idnx_fias_address_object_help_search_aoguid;
+    DROP INDEX idnx_fias_address_object_help_search_regioncode;
+
     FOR var_aoguid, var_regioncode IN SELECT MIN(aoguid::TEXT), min(regioncode) FROM fias_address_object a1 WHERE NOT EXISTS (
         SELECT 1 FROM fias_address_object a2 WHERE a2.parentguid=a1.aoguid
         ) GROUP BY aoguid LOOP
@@ -21,6 +26,10 @@ BEGIN
 
 
     END LOOP;
+
+    CREATE INDEX idnx_fias_address_object_help_search_address on fias_address_object_help_search  USING gin (to_tsvector('russian', address));
+    CREATE INDEX idnx_fias_address_object_help_search_aoguid ON fias_address_object_help_search (aoguid);
+    CREATE INDEX idnx_fias_address_object_help_search_regioncode ON fias_address_object_help_search (regioncode);
 
 END;
 
