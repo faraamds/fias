@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static AddressObject getAoByGuid(string $guid)
  * @method static House getHouseByGuid(string $guid)
  * @method static Room getRoomByGuid(string $guid)
+ * @method static void import(string $path)
+ * @method static void update(string $path)
  */
 class Fias extends Facade
 {

@@ -15,12 +15,18 @@ use Illuminate\Database\Eloquent\Collection;
 
 class Fias
 {
-    public function import(string $path = null)
+    /**
+     * @param string|null $path
+     */
+    public function import(string $path = null) : void
     {
         ImportFromXML::run($path);
     }
 
-    public function update(string $path = null)
+    /**
+     * @param string|null $path
+     */
+    public function update(string $path = null) : void
     {
         UpdateFromXML::run($path);
     }
@@ -42,7 +48,7 @@ class Fias
      * @param string|null $region
      * @return array
      */
-    public function searchByAddress(string $address, string $house = null, string $building = null, string $apartment = null, string $region = null)
+    public function searchByAddress(string $address, string $house = null, string $building = null, string $apartment = null, string $region = null) : array
     {
         return Search::byAddress($address, $house, $building, $apartment, $region);
     }
