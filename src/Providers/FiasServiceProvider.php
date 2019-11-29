@@ -4,6 +4,7 @@ namespace faraamds\fias\Providers;
 use faraamds\fias\Classes\Fias;
 use faraamds\fias\Console\Commands\FiasImport;
 use faraamds\fias\Console\Commands\FiasUpdate;
+use faraamds\fias\Console\Commands\LoadProcedures;
 use faraamds\fias\database\ProcedureLoader;
 use Illuminate\Support\ServiceProvider;
 use faraamds\fias\Console\Commands\MakeMigrations;
@@ -41,7 +42,7 @@ class FiasServiceProvider extends ServiceProvider
             return $app->make(MakeMigrations::class);
         });
         $this->app->singleton('command.load-procedures', function ($app) {
-            return $app->make(ProcedureLoader::class);
+            return $app->make(LoadProcedures::class);
         });
         $this->app->singleton('command.import', function ($app) {
             return $app->make(FiasImport::class);
