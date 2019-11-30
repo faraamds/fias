@@ -26,13 +26,12 @@ class SearchAddressResult
      * @param string|null $building
      * @param string|null $stucture
      * @param string|null $room
-     * @param string|null $aoid
      *
      * @return SearchAddressResult
      */
-    public function fill(string $aoguid, string $house = null, string $building = null, string $stucture = null, string $room = null, string $aoid = null) : self
+    public function fill(string $aoguid, string $house = null, string $building = null, string $stucture = null, string $room = null) : self
     {
-        $this->findAddressObject($aoguid, $aoid);
+        $this->findAddressObject($aoguid);
         $this->findHouse($house, $building, $stucture);
         $this->findRoom($room);
 
@@ -55,15 +54,11 @@ class SearchAddressResult
      * @param string $aoguid
      * @param string|null $aoid
      */
-    protected function findAddressObject(string $aoguid, string $aoid = null): void
+    protected function findAddressObject(string $aoguid): void
     {
         /** @var Builder $query */
-        $query = AddressObject::where('aoguid', $aoguid);
-        if ($aoid) {
-            $query->where('aoid', $aoid);
-        } else {
-            $query->whereNull('nextid');
-        }
+        $query = AddressObject::where('aoguid', $aoguid)
+            ->orderByDesc('enddate');
 
         $this->addressObject = $query->firstOrFail();
     }
