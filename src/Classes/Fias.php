@@ -44,13 +44,14 @@ class Fias
      * @param string $address
      * @param string|null $house
      * @param string|null $building
+     * @param string|null $structure
      * @param string|null $apartment
      * @param string|null $region
      * @return array
      */
-    public function searchByAddress(string $address, string $house = null, string $building = null, string $apartment = null, string $region = null) : array
+    public function searchByAddress(string $address, string $house = null, string $building = null, string $structure = null, string $apartment = null, string $region = null) : array
     {
-        return Search::byAddress($address, $house, $building, $apartment, $region);
+        return Search::byAddress($address, $house, $building, $structure, $apartment, $region);
     }
 
     /**

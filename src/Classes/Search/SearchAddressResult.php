@@ -88,7 +88,7 @@ class SearchAddressResult
         }
 
         if ($stucture) {
-            $this->applyPattern($query, 'strucnum', $building);
+            $this->applyPattern($query, 'strucnum', $stucture);
         }
 
         $this->house = $query->first();
