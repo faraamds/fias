@@ -54,7 +54,7 @@ class ImportDelAddressObject extends FiasImport
     ];
 
     protected $index_fields = [
-        'parent_id', 'real_depth', 'position', 'aoguid', 'aoid', 'parentguid', 'previd', 'nextid',
+        'aoguid', 'aoid', 'parentguid', 'previd', 'nextid',
     ];
 
     protected $fias_key_field = 'aoid';

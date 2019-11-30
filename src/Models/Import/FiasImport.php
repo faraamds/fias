@@ -79,6 +79,14 @@ abstract class FiasImport
             throw new FiasImportTooManyFilesException('Too many files for import. Must be only one.');
         }
         $this->current_file_name = Arr::first($this->import_files);
+
+        if (!$this->current_file_name) {
+            echo("File with prefix {$this->xml_file_prefix} not found\n");
+            return;
+        }
+
+        echo("Importing {$this->current_file_name} ...");
+
         $this->initXmlReader();
 
         DB::table($this->getTable())->truncate();
@@ -102,6 +110,7 @@ abstract class FiasImport
         $this->createIndexes();
         $this->additionalImportActions();
         $this->writeFilename();
+        echo("done\n");
     }
 
     protected function process_update(string $path=null) : void

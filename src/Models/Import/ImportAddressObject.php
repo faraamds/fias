@@ -56,8 +56,7 @@ class ImportAddressObject extends FiasImport
     ];
 
     protected $index_fields = [
-        'parent_id', 'aoguid', 'aoid', 'parentguid', 'previd', 'nextid',
-        'regioncode', 'plaincode'
+        'aoguid', 'aoid', 'parentguid', 'previd', 'nextid', 'regioncode',
     ];
 
     protected $fias_key_field = 'aoid';
