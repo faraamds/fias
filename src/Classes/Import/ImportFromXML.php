@@ -76,12 +76,13 @@ class ImportFromXML
         Landmark::whereRaw('landid IN (' . DelLandmark::select('landid')->toSql() . ')')->delete();
 
         AddressObject::whereNotNull('nextid')
-            ->whereRaw('nextid NOT IN (' . AddressObject::select('aoid')->toSql() . ')')
+            ->whereRaw('NOT EXISTS (SELECT 1 FROM fias_address_object fa WHERE fa.aoid=fias_address_object.nextid)')            ->whereRaw('nextid NOT IN (' . AddressObject::select('aoid')->toSql() . ')')
             ->update([
                 'nextid' => null,
             ]);
+
         AddressObject::whereNotNull('previd')
-            ->whereRaw('previd NOT IN (' . AddressObject::select('aoid')->toSql() . ')')
+            ->whereRaw('NOT EXISTS (SELECT 1 FROM fias_address_object fa WHERE fa.aoid=fias_address_object.previd)')
             ->update([
                 'previd' => null,
             ]);
