@@ -30,7 +30,7 @@ class SearchAddressResult
      *
      * @return SearchAddressResult
      */
-    public function fill(string $aoguid, string $house, string $building = null, string $stucture = null, string $room = null, string $aoid = null) : self
+    public function fill(string $aoguid, string $house = null, string $building = null, string $stucture = null, string $room = null, string $aoid = null) : self
     {
         $this->findAddressObject($aoguid, $aoid);
         $this->findHouse($house, $building, $stucture);
@@ -69,12 +69,16 @@ class SearchAddressResult
     }
 
     /**
-     * @param string $house
+     * @param string|null $house
      * @param string|null $building
      * @param string|null $stucture
      */
-    protected function findHouse(string $house, string $building = null, string $stucture = null) : void
+    protected function findHouse(string $house = null, string $building = null, string $stucture = null) : void
     {
+        if (!$house) {
+            $this->house = null;
+            return;
+        }
         /** @var Builder $query */
         $query = House::where('aoguid', $this->addressObject->aoguid)
             ->orderByRaw('housenum nulls first')
