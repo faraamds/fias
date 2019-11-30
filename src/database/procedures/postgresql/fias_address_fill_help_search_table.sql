@@ -9,9 +9,9 @@ DECLARE
 BEGIN
 
     TRUNCATE TABLE fias_address_object_help_search;
-    DROP INDEX idnx_fias_address_object_help_search_address;
-    DROP INDEX idnx_fias_address_object_help_search_aoguid;
-    DROP INDEX idnx_fias_address_object_help_search_regioncode;
+    DROP INDEX IF EXISTS idnx_fias_address_object_help_search_address;
+    DROP INDEX IF EXISTS idnx_fias_address_object_help_search_aoguid;
+    DROP INDEX IF EXISTS idnx_fias_address_object_help_search_regioncode;
 
     FOR var_aoguid, var_regioncode IN SELECT MIN(aoguid::TEXT), min(regioncode) FROM fias_address_object a1 WHERE NOT EXISTS (
         SELECT 1 FROM fias_address_object a2 WHERE a2.parentguid=a1.aoguid
