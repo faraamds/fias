@@ -61,16 +61,6 @@ class ImportAddressObject extends FiasImport
 
     protected $fias_key_field = 'aoid';
 
-    protected function additionalImportActions(): void
-    {
-        if (strtoupper(app('db')->getDefaultConnection()) === 'PGSQL') {
-
-            DB::unprepared('CREATE INDEX idx_gin_fias_address_object ON fias_address_object USING gin (to_tsvector(\'russian\', formalname))');
-            DB::unprepared('CREATE INDEX idx_gin_fias_address_object_fn_sn ON fias_address_object USING gin (to_tsvector(\'russian\', formalname || \' \' || shortname))');
-
-        }
-    }
-
     /**
      * @return Model
      */

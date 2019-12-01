@@ -1,11 +1,12 @@
-CREATE OR REPLACE FUNCTION fias_address_formal_whole_history(in_aoguid UUID)
-    RETURNS TEXT AS $BODY$
+CREATE OR REPLACE FUNCTION fias_address_formal_whole_history_with_count(in_aoguid UUID)
+    RETURNS TEXT[] AS $BODY$
 DECLARE
 
     var_name TEXT[];
     var_aoguid UUID;
     var_result TEXT;
     var_processed_guids UUID[] := ARRAY[]::UUID[];
+    var_count INT := 1;
 
 BEGIN
 
@@ -27,14 +28,15 @@ BEGIN
 
             IF ARRAY[var_aoguid]::UUID[] <@ var_processed_guids THEN
                 RAISE NOTICE 'LOOP REF IN %', var_aoguid;
-                RETURN var_result;
+                RETURN ARRAY[var_result, var_count::TEXT]::TEXT[];
             END IF;
 
             var_processed_guids := var_processed_guids || var_aoguid;
+            var_count := var_count + 1;
 
         END LOOP;
 
-    RETURN var_result;
+    RETURN ARRAY[var_result, var_count::TEXT]::TEXT[];
 
 END;
 
