@@ -128,6 +128,9 @@ class SearchAddressResult
     protected function getPattern(string $str) : string
     {
         $keys = preg_split('/([\d]+)([\D]+)/i', $str, 0, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $keys = array_map(function ($item) {
+            return trim($item);
+        }, $keys);
         $keys = array_filter($keys, function ($item) {
             return !preg_match('/[\/-]/', preg_replace('/\s/', '', $item));
         });
