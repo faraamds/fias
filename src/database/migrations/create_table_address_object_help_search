@@ -17,6 +17,7 @@ class CreateTableAddressObjectHelpSearch extends Migration
             $table->uuid('aoguid');
             $table->string('regioncode', 2);
             $table->text('address');
+            $table->integer('ao_count');
         });
     }
 
