@@ -13,25 +13,6 @@ class Search
     const HOUSE_SUBSTRINGS = ['дом', 'д'];
     const APARTMENT_SUBSTRINGS = ['кв', 'квартира'];
 
-    /**
-     * @param string $address
-     * @return array
-     */
-    public static function byAddressString(string $address) : array
-    {
-//        $keywords = preg_replace("/[\s,]+/", '|', $address);
-
-        $converter = new SearchObject($address);
-
-        $result =  DB::select('SELECT * FROM fias_address_search(?)', [$converter->getKeywords()]);
-
-        return array_map(function ($item) {
-
-            return ["{$item->address} ({$item->actual_address})", $item->target_aoguid, $item->target_aoid];
-
-        }, $result);
-    }
-
     public static function byAddress(string $address, string $house = null, string $building = null, string $structure = null, string $apartment = null, string $region = null)
     {
         $best_candidate = null;
