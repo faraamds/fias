@@ -3,7 +3,6 @@ CREATE OR REPLACE FUNCTION fias_address_formal(in_aoguid UUID, in_aoid UUID DEFA
 DECLARE
 
     var_address_object RECORD;
-    var_postalcode VARCHAR(6);
     var_result TEXT;
     i INT;
 BEGIN
@@ -15,7 +14,6 @@ BEGIN
         ORDER BY enddate DESC
         LIMIT 1;
 
-    var_postalcode := var_address_object.postalcode;
     var_result := concat(var_address_object.formalname, ' ', var_address_object.shortname);
 
     WHILE var_address_object.parentguid IS NOT NULL
@@ -31,7 +29,7 @@ BEGIN
 
         END LOOP;
 
-    RETURN concat(var_postalcode, ', ' , var_result);
+    RETURN var_result;
 
 END;
 
