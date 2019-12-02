@@ -87,6 +87,9 @@ abstract class FiasImport
 
         echo("Importing {$this->current_file_name} ...");
 
+        $total = $this->countModels();
+        $i = 0;
+
         $this->initXmlReader();
 
         DB::table($this->getTable())->truncate();
@@ -101,6 +104,7 @@ abstract class FiasImport
                 DB::table($this->getTable())->insert($rows);
                 $rows = [];
             }
+            echo("\rImporting {$this->current_file_name} ... " . round((++$i/$total)*100) . '%');
         }
 
         if (count($rows) > 0) {
@@ -110,7 +114,8 @@ abstract class FiasImport
         $this->createIndexes();
         $this->additionalImportActions();
         $this->writeFilename();
-        echo("done\n");
+
+        echo("\rImporting {$this->current_file_name} ... done\n");
     }
 
     protected function process_update(string $path=null) : void
@@ -119,16 +124,37 @@ abstract class FiasImport
         $this->findFiles($path);
         array_walk($this->import_files, function ($file) {
             $this->current_file_name = $file;
+
+            echo("Importing {$this->current_file_name} ...");
+            $total = $this->countModels();
+            $i = 0;
             $this->initXmlReader();
 
             while ($this->hasMoreModels()) {
                 $rows = $this->getArrayOfRowsAndRewindToNext();
-
+                echo("\rImporting {$this->current_file_name} ... " . round((++$i/$total)*100) . '%');
                 DB::table($this->getTable())->updateOrInsert([$this->fias_key_field => $rows[$this->fias_key_field]], $rows);
             }
 
             $this->writeFilename();
+            echo("\rImporting {$this->current_file_name} ... done\n");
+
         });
+    }
+
+    /**
+     * @return int
+     */
+    protected function countModels() : int
+    {
+        $i = 0;
+        $this->initXmlReader();
+
+        while ($this->hasMoreModels()) {
+            $i++;
+            $this->xmlReader->next($this->xml_object_tag_name);
+        }
+        return $i;
     }
 
     /**
