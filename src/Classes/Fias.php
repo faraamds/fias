@@ -110,21 +110,14 @@ class Fias
 
     /**
      * @param string $guid
+     * @param string|null $keywords
      * @return array
      */
-    public function getAoChainByGuid(string $guid) : array
+    public function getAoChainByGuid(string $guid, string $keywords = null) : array
     {
-        return DB::select('SELECT * FROM fias_address_actual_chain(?)', [$guid]);
-    }
-
-    /**
-     * @param string $guid
-     * @param string $address
-     * @return array
-     */
-    public function getSatisfyAoChainByGuid(string $guid, string $address) : array
-    {
-        return DB::select('SELECT * FROM fias_address_satisfy_chain(?,?)', [$guid, $address]);
+        return $keywords
+            ? DB::select('SELECT * FROM fias_address_satisfy_chain(?,?)', [$guid, $keywords])
+            : DB::select('SELECT * FROM fias_address_actual_chain(?)', [$guid]);
     }
 
     /**
