@@ -60,7 +60,13 @@ class Fias
      */
     public function getHousesByAoguid(string $aoguid) : Collection
     {
-        return House::where('aoguid', $aoguid)->get();
+        return House::where('aoguid', $aoguid)
+            ->select('houseguid', 'housenum', 'buildnum', 'strucnum')
+            ->distinct()
+            ->orderByRaw('housenum nulls first')
+            ->orderByRaw('buildnum nulls first')
+            ->orderByRaw('strucnum nulls first')
+            ->get();
     }
 
     /**
@@ -69,7 +75,12 @@ class Fias
      */
     public function getRoomByHouseguid(string $houseguid) : Collection
     {
-        return Room::where('houseguid', $houseguid)->get();
+        return Room::where('houseguid', $houseguid)
+            ->select('roomguid', 'flatnumber', 'roomnumber')
+            ->distinct()
+            ->orderByRaw('flatnumber nulls first')
+            ->orderByRaw('roomnumber nulls first')
+            ->get();
     }
 
     /**
@@ -79,6 +90,11 @@ class Fias
     public function getAoByGuid(string $guid) : AddressObject
     {
         return AddressObject::where('aoguid', $guid)->orderByDesc('enddate')->first();
+    }
+
+    public function getAoChainByGuid(string $guid) : Collection
+    {
+
     }
 
     /**
