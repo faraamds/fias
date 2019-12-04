@@ -40,7 +40,7 @@ BEGIN
             END IF;
 
             INSERT into fias_address_object_help_search (aoguid, houseguid, roomguid, regioncode, address, ao_count)
-            VALUES (var_aoguid::UUID, var_houseguid, var_roomguid, var_regioncode, var_search_result[1] || var_house_room_part, var_search_result[2]::INT);
+            VALUES (var_aoguid::UUID, var_houseguid, var_roomguid, var_regioncode, var_search_result[1] || var_house_room_part, var_search_result[2]::INT + 1);
 
             var_is_houses_exists := TRUE;
 

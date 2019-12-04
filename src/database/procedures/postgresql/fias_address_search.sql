@@ -8,7 +8,7 @@ BEGIN
           SELECT fias_address_object_help_search.aoguid, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid,
                  (SELECT * FROM fias_address_house_room(fias_address_object_help_search.aoguid, in_q, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid)) as actual_address
           FROM fias_address_object_help_search,
-               plainto_tsquery(in_q) as q
+               plainto_tsquery('russian', in_q) as q
 
           WHERE CASE WHEN in_regioncode IS NOT NULL THEN fias_address_object_help_search.regioncode=in_regioncode ELSE 1=1 END
           AND to_tsvector('russian', fias_address_object_help_search.address) @@ q
