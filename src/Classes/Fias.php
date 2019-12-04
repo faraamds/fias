@@ -8,6 +8,7 @@ use faraamds\fias\Classes\Import\ImportFromXML;
 use faraamds\fias\Classes\Import\UpdateFromXML;
 use faraamds\fias\Classes\Search\Search;
 use faraamds\fias\Classes\Search\SearchAddressResult;
+use faraamds\fias\Classes\Search\SearchHouseRoomResult;
 use faraamds\fias\Models\AddressObject;
 use faraamds\fias\Models\House;
 use faraamds\fias\Models\Room;
@@ -52,9 +53,9 @@ class Fias
      * @param string|null $building
      * @param string|null $structure
      * @param string|null $room
-     * @return string
+     * @return SearchHouseRoomResult
      */
-    public function searchHouseAndRoom(string $aoguid, string $house, string $building = null, string $structure = null, string $room = null) : string
+    public function searchHouseAndRoom(string $aoguid, string $house, string $building = null, string $structure = null, string $room = null) : SearchHouseRoomResult
     {
         return Search::houseAndRoom($aoguid, $house, $building = null, $structure = null, $room = null);
     }
