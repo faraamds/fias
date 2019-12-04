@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fias_address_satysfy_chain(in_aoguid UUID, in_q TEXT)
+CREATE OR REPLACE FUNCTION fias_address_satisfy_chain(in_aoguid UUID, in_q TEXT)
     RETURNS TABLE(aoguid UUID, formalname VARCHAR(120), shortname VARCHAR(10), aolevel INT, sortorder INT) AS $BODY$
 DECLARE
 
@@ -13,7 +13,7 @@ BEGIN
     SELECT * INTO var_address_object
         FROM fias_address_object
         WHERE fias_address_object.aoguid=in_aoguid
-          AND to_tsvector('russian', formalname) @@ var_or_query
+          AND to_tsvector('russian', fias_address_object.formalname) @@ var_or_query
         ORDER BY fias_address_object.enddate DESC
         LIMIT 1;
 
@@ -44,8 +44,8 @@ BEGIN
 
             SELECT * INTO var_address_object
             FROM fias_address_object
-            WHERE fias_address_object.aoguid = var_address_object.parentguid
-              AND to_tsvector('russian', formalname) @@ var_or_query
+            WHERE fias_address_object.aoguid = var_guid
+              AND to_tsvector('russian', fias_address_object.formalname) @@ var_or_query
             ORDER BY fias_address_object.enddate DESC
             LIMIT 1;
 
@@ -53,7 +53,7 @@ BEGIN
 
                 SELECT * INTO var_address_object
                 FROM fias_address_object
-                WHERE fias_address_object.aoguid = var_address_object.parentguid
+                WHERE fias_address_object.aoguid = var_guid
                 ORDER BY fias_address_object.enddate DESC
                 LIMIT 1;
 
