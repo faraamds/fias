@@ -4,6 +4,7 @@
 namespace faraamds\fias\Facades;
 
 
+use faraamds\fias\Classes\Search\SearchAddressResult;
 use faraamds\fias\Models\AddressObject;
 use faraamds\fias\Models\House;
 use faraamds\fias\Models\Room;
