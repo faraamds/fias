@@ -46,9 +46,15 @@ class Fias
         return Search::byAddress($address, $region);
     }
 
-    public function getFullInfo(string $aoguid, string $houseguid = null, string $roomguid = null)
+    /**
+     * @param string $aoguid
+     * @param string|null $houseguid
+     * @param string|null $roomguid
+     * @return SearchAddressResult
+     */
+    public function getFullInfo(string $aoguid, string $houseguid = null, string $roomguid = null) : SearchAddressResult
     {
-        return (new SearchAddressResult())->fill($aoguid, $houseguid, $roomguid)->toJson();
+        return (new SearchAddressResult())->fill($aoguid, $houseguid, $roomguid);
     }
 
     /**
