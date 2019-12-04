@@ -119,6 +119,16 @@ class Fias
 
     /**
      * @param string $guid
+     * @param string $address
+     * @return array
+     */
+    public function getSatisfyAoChainByGuid(string $guid, string $address) : array
+    {
+        return DB::select('SELECT * FROM fias_address_satisfy_chain(?,?)', [$guid, $address]);
+    }
+
+    /**
+     * @param string $guid
      * @return House
      */
     public function getHouseByGuid(string $guid) : House
