@@ -27,11 +27,11 @@ class Search
      * @param string|null $building
      * @param string|null $structure
      * @param string|null $room
-     * @return string
+     * @return SearchHouseRoomResult
      */
-    public static function houseAndRoom(string $aoguid, string $house, string $building = null, string $structure = null, string $room = null) : string
+    public static function houseAndRoom(string $aoguid, string $house, string $building = null, string $structure = null, string $room = null) : SearchHouseRoomResult
     {
-        return (new SearchHouseRoomResult())->find($aoguid, $house, $building, $structure, $room)->toJson();
+        return (new SearchHouseRoomResult())->find($aoguid, $house, $building, $structure, $room);
     }
 
 }

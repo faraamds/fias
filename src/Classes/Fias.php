@@ -48,6 +48,19 @@ class Fias
 
     /**
      * @param string $aoguid
+     * @param string $house
+     * @param string|null $building
+     * @param string|null $structure
+     * @param string|null $room
+     * @return string
+     */
+    public function searchHouseAndRoom(string $aoguid, string $house, string $building = null, string $structure = null, string $room = null) : string
+    {
+        return Search::houseAndRoom($aoguid, $house, $building = null, $structure = null, $room = null);
+    }
+
+    /**
+     * @param string $aoguid
      * @param string|null $houseguid
      * @param string|null $roomguid
      * @return SearchAddressResult
