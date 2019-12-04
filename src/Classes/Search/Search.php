@@ -4,52 +4,20 @@
 namespace faraamds\fias\Classes\Search;
 
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use faraamds\fias\Models\AddressObject;
 
 class Search
 {
-    const HOUSE_SUBSTRINGS = ['дом', 'д'];
-    const APARTMENT_SUBSTRINGS = ['кв', 'квартира'];
-
-    public static function byAddress(string $address, string $house = null, string $building = null, string $structure = null, string $apartment = null, string $region = null)
+    /**
+     * @param string $address
+     * @param string|null $region
+     * @return array
+     */
+    public static function byAddress(string $address, string $region = null) : array
     {
         $best_candidate = null;
-        $addresses = DB::select('SELECT * FROM fias_address_search(?, ?)', [static::createTsQuery($address), $region]);
+        $addresses = DB::select('SELECT * FROM fias_address_search(?, ?)', [$address, $region]);
 
-        $best = Arr::first($addresses);
-
-        if ($best) {
-            $best_candidate = (new SearchAddressResult())->fill($best->aoguid, $house, $building, $structure, $apartment)->toJson();
-        }
-
-        return compact('addresses', 'best_candidate');
-    }
-
-    /**
-     * @param string $uuid
-     * @return AddressObject
-     */
-    public static function byAoGuid(string $uuid): AddressObject
-    {
-        return AddressObject::where('aoguid', $uuid)->orderByDesc('enddate')->firstOrFail();
-    }
-
-    /**
-     * @param string $query
-     * @return string
-     */
-    protected static function createTsQuery(string $query) : string
-    {
-        return $query;
-//        return preg_replace('/\s+/', ' & ', trim($query));
-//        $keywords = preg_split('/\s*,\s*/', $query);
-//
-//        return implode(' | ', array_map(function ($item) {
-//
-//            return preg_replace('/\s+/', ' & ', trim($item));
-//
-//        }, $keywords));
+        return compact('addresses');
     }
 }

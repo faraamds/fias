@@ -4,15 +4,20 @@
 namespace faraamds\fias\Classes;
 
 
-use Carbon\Carbon;
 use faraamds\fias\Classes\Import\ImportFromXML;
 use faraamds\fias\Classes\Import\UpdateFromXML;
 use faraamds\fias\Classes\Search\Search;
+use faraamds\fias\Classes\Search\SearchAddressResult;
 use faraamds\fias\Models\AddressObject;
 use faraamds\fias\Models\House;
 use faraamds\fias\Models\Room;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
+/**
+ * Class Fias
+ * @package faraamds\fias\Classes
+ */
 class Fias
 {
     /**
@@ -33,25 +38,17 @@ class Fias
 
     /**
      * @param string $address
-     * @return array
-     */
-    public function searchByAddressString(string $address)
-    {
-        return Search::byAddressString($address);
-    }
-
-    /**
-     * @param string $address
-     * @param string|null $house
-     * @param string|null $building
-     * @param string|null $structure
-     * @param string|null $apartment
      * @param string|null $region
      * @return array
      */
-    public function searchByAddress(string $address, string $house = null, string $building = null, string $structure = null, string $apartment = null, string $region = null) : array
+    public function searchByAddress(string $address, string $region = null) : array
     {
-        return Search::byAddress($address, $house, $building, $structure, $apartment, $region);
+        return Search::byAddress($address, $region);
+    }
+
+    public function getFullInfo(string $aoguid, string $houseguid = null, string $roomguid = null)
+    {
+        return (new SearchAddressResult())->fill($aoguid, $houseguid, $roomguid)->toJson();
     }
 
     /**
@@ -92,9 +89,13 @@ class Fias
         return AddressObject::where('aoguid', $guid)->orderByDesc('enddate')->first();
     }
 
-    public function getAoChainByGuid(string $guid) : Collection
+    /**
+     * @param string $guid
+     * @return array
+     */
+    public function getAoChainByGuid(string $guid) : array
     {
-
+        return DB::select('SELECT * FROM fias_address_actual_chain(?)', [$guid]);
     }
 
     /**

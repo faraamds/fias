@@ -4,36 +4,47 @@
 namespace faraamds\fias\Classes\Search;
 
 
+use faraamds\fias\Facades\Fias;
 use faraamds\fias\Models\AddressObject;
 use faraamds\fias\Models\House;
 use faraamds\fias\Models\Room;
-use Illuminate\Database\Eloquent\Builder;
 
 class SearchAddressResult
 {
     /** @var AddressObject */
-    protected $addressObject;
+    protected ?AddressObject $addressObject;
 
     /** @var House */
-    protected $house;
+    protected ?House $house;
 
     /** @var Room */
-    protected $room;
+    protected ?Room $room;
+
+    /**
+     * SearchAddressResult constructor.
+     */
+    public function __construct()
+    {
+        $this->addressObject = null;
+        $this->house = null;
+        $this->room = null;
+    }
 
     /**
      * @param string $aoguid
-     * @param string $house
-     * @param string|null $building
-     * @param string|null $stucture
-     * @param string|null $room
-     *
+     * @param string|null $houseguid
+     * @param string|null $roomguid
      * @return SearchAddressResult
      */
-    public function fill(string $aoguid, string $house = null, string $building = null, string $stucture = null, string $room = null) : self
+    public function fill(string $aoguid, string $houseguid = null, string $roomguid = null) : self
     {
         $this->findAddressObject($aoguid);
-        $this->findHouse($house, $building, $stucture);
-        $this->findRoom($room);
+        if ($houseguid) {
+            $this->findHouse($houseguid);
+        }
+        if ($roomguid) {
+            $this->findRoom($roomguid);
+        }
 
         return $this;
     }
@@ -52,89 +63,25 @@ class SearchAddressResult
 
     /**
      * @param string $aoguid
-     * @param string|null $aoid
      */
     protected function findAddressObject(string $aoguid): void
     {
-        /** @var Builder $query */
-        $query = AddressObject::where('aoguid', $aoguid)
-            ->orderByDesc('enddate');
-
-        $this->addressObject = $query->firstOrFail();
+        $this->addressObject = Fias::getAoByGuid($aoguid);
     }
 
     /**
-     * @param string|null $house
-     * @param string|null $building
-     * @param string|null $stucture
+     * @param string $houseguid
      */
-    protected function findHouse(string $house = null, string $building = null, string $stucture = null) : void
+    protected function findHouse(string $houseguid) : void
     {
-        if (!$house) {
-            $this->house = null;
-            return;
-        }
-        /** @var Builder $query */
-        $query = House::where('aoguid', $this->addressObject->aoguid)
-            ->orderByRaw('housenum nulls first')
-            ->orderByRaw('buildnum nulls first')
-            ->orderByRaw('strucnum nulls first')
-            ->orderByDesc('enddate');
-        $this->applyPattern($query, 'housenum', $house);
-
-        if ($building) {
-            $this->applyPattern($query, 'buildnum', $building);
-        }
-
-        if ($stucture) {
-            $this->applyPattern($query, 'strucnum', $stucture);
-        }
-
-        $this->house = $query->first();
-    }
-
-    protected function findRoom(string $room = null) : void
-    {
-        if ($this->house && $room) {
-
-            /** @var Builder $query */
-            $query = Room::where('houseguid', $this->house->houseguid)
-                ->orderByRaw('flatnumber nulls first')
-                ->orderByRaw('roomnumber nulls first')
-                ->orderByDesc('enddate');
-            $this->applyPattern($query, 'flatnumber', $room);
-
-            $this->room = $query->first();
-        }
+        $this->house = Fias::getHouseByGuid($houseguid);
     }
 
     /**
-     * @param Builder $query
-     * @param string $column
-     * @param string $search
-     * @return Builder
+     * @param string $roomguid
      */
-    protected function applyPattern(Builder $query, string $column, string $search) : Builder
+    protected function findRoom(string $roomguid) : void
     {
-        $pattern = $this->getPattern($search);
-
-        return $query->whereRaw("{$column} ~* '{$pattern}'");
-    }
-
-    /**
-     * @param string $str
-     * @return string
-     */
-    protected function getPattern(string $str) : string
-    {
-        $keys = preg_split('/([\d]+)([\D]+)/i', $str, 0, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-        $keys = array_map(function ($item) {
-            return trim($item);
-        }, $keys);
-        $keys = array_filter($keys, function ($item) {
-            return !preg_match('/[\/-]/', preg_replace('/\s/', '', $item));
-        });
-
-        return '^' . implode('[-/\s]*', $keys);
+        $this->room = Fias::getRoomByGuid($roomguid);
     }
 }
