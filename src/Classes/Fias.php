@@ -66,7 +66,7 @@ class Fias
         return House::where('aoguid', $aoguid)
             ->select('houseguid', 'housenum', 'buildnum', 'strucnum')
             ->distinct()
-            ->orderByRaw('housenum nulls first')
+            ->orderBy('housenum')
             ->orderByRaw('buildnum nulls first')
             ->orderByRaw('strucnum nulls first')
             ->get();
@@ -81,7 +81,7 @@ class Fias
         return Room::where('houseguid', $houseguid)
             ->select('roomguid', 'flatnumber', 'roomnumber')
             ->distinct()
-            ->orderByRaw('flatnumber nulls first')
+            ->orderBy('flatnumber')
             ->orderByRaw('roomnumber nulls first')
             ->get();
     }
