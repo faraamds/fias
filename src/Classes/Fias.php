@@ -57,7 +57,7 @@ class Fias
      */
     public function searchHouseAndRoom(string $aoguid, string $house, string $building = null, string $structure = null, string $room = null) : SearchHouseRoomResult
     {
-        return Search::houseAndRoom($aoguid, $house, $building = null, $structure = null, $room = null);
+        return Search::houseAndRoom($aoguid, $house, $building, $structure, $room);
     }
 
     /**
