@@ -9,7 +9,6 @@ DECLARE
     var_house_room_part TEXT;
     var_houseguid UUID;
     var_roomguid UUID;
-    var_is_houses_exists BOOL;
 
 BEGIN
 
@@ -22,9 +21,12 @@ BEGIN
     FOR var_aoguid, var_regioncode IN SELECT MIN(aoguid::TEXT), MIN(regioncode) FROM fias_address_object GROUP BY aoguid LOOP
 
         var_search_result := fias_address_formal_whole_history_with_count(var_aoguid::UUID);
-        var_is_houses_exists := FALSE;
         var_houseguid := NULL;
         var_roomguid := NULL;
+
+        INSERT into fias_address_object_help_search (aoguid, houseguid, roomguid, regioncode, address, ao_count)
+        VALUES (var_aoguid::UUID, var_houseguid, var_roomguid, var_regioncode, var_search_result[1], var_search_result[2]::INT);
+
         FOR var_houseguid, var_roomguid, var_house_room_part IN SELECT houseguid, roomguid, house_room
                 FROM fias_house_room_tmp
                 WHERE fias_house_room_tmp.aoguid=var_aoguid::UUID LOOP
@@ -42,16 +44,7 @@ BEGIN
             INSERT into fias_address_object_help_search (aoguid, houseguid, roomguid, regioncode, address, ao_count)
             VALUES (var_aoguid::UUID, var_houseguid, var_roomguid, var_regioncode, var_search_result[1] || var_house_room_part, var_search_result[2]::INT + 1);
 
-            var_is_houses_exists := TRUE;
-
         END LOOP;
-
-        IF NOT var_is_houses_exists THEN
-
-            INSERT into fias_address_object_help_search (aoguid, houseguid, roomguid, regioncode, address, ao_count)
-            VALUES (var_aoguid::UUID, var_houseguid, var_roomguid, var_regioncode, var_search_result[1], var_search_result[2]::INT);
-
-        END IF;
 
         var_i:=var_i+1;
 
