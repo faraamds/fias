@@ -41,7 +41,7 @@ abstract class AbstractImport
             ]);
 
         echo("done\nCreating address search table ...");
-        DB::select('select * from fias_address_fill_help_search_table()');
+        DB::select('select * from fias_address_fill_help_search_table_address_full()');
         echo("done\n");
     }
 }
