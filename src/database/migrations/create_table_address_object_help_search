@@ -18,8 +18,11 @@ class CreateTableAddressObjectHelpSearch extends Migration
             $table->uuid('houseguid');
             $table->uuid('roomguid');
             $table->string('regioncode', 2);
-            $table->text('address');
             $table->integer('ao_count');
+            $table->text('address');
+            $table->text('house');
+            $table->text('flatnumber');
+            $table->text('buildnum');
         });
     }
 

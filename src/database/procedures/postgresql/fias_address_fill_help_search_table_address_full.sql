@@ -6,7 +6,9 @@ DECLARE
     var_regioncode VARCHAR(2);
     var_i INT :=0;
     var_search_result TEXT[];
-    var_house_room_part TEXT;
+    var_house TEXT;
+    var_flatnumber TEXT;
+    var_buildnum TEXT;
     var_houseguid UUID;
     var_roomguid UUID;
 
@@ -27,22 +29,12 @@ BEGIN
         INSERT into fias_address_object_help_search (aoguid, houseguid, roomguid, regioncode, address, ao_count)
         VALUES (var_aoguid::UUID, var_houseguid, var_roomguid, var_regioncode, var_search_result[1], var_search_result[2]::INT);
 
-        FOR var_houseguid, var_roomguid, var_house_room_part IN SELECT houseguid, roomguid, house_room
+        FOR var_houseguid, var_roomguid, var_house, var_flatnumber, var_buildnum IN SELECT houseguid, roomguid, house, flatnumber, buildnum
                 FROM fias_house_room_tmp
                 WHERE fias_house_room_tmp.aoguid=var_aoguid::UUID LOOP
 
-            raise notice 'house_room %', var_house_room_part;
-
-            IF var_house_room_part IS  NULL THEN
-                var_house_room_part := '';
-                var_houseguid := NULL;
-                var_roomguid := NULL;
-            ELSE
-                var_house_room_part := ', ' || var_house_room_part;
-            END IF;
-
-            INSERT into fias_address_object_help_search (aoguid, houseguid, roomguid, regioncode, address, ao_count)
-            VALUES (var_aoguid::UUID, var_houseguid, var_roomguid, var_regioncode, var_search_result[1] || var_house_room_part, var_search_result[2]::INT + 1);
+            INSERT into fias_address_object_help_search (aoguid, houseguid, roomguid, regioncode, address, ao_count, house, flatnumber, buildnum)
+            VALUES (var_aoguid::UUID, var_houseguid, var_roomguid, var_regioncode, var_search_result[1], var_search_result[2]::INT + 1, var_house, var_flatnumber, var_buildnum);
 
         END LOOP;
 
@@ -52,7 +44,7 @@ BEGIN
 
         END LOOP;
 
-    CREATE INDEX idnx_fias_address_object_help_search_address on fias_address_object_help_search  USING gin (to_tsvector('russian', address));
+    CREATE INDEX idnx_fias_address_object_help_search_address on fias_address_object_help_search  USING GIN((setweight(to_tsvector('russian', coalesce(address, '')), 'A') || setweight(to_tsvector('russian', coalesce(house, '')), 'B') || setweight(to_tsvector('russian', coalesce(flatnumber, '')), 'C') || setweight(to_tsvector('russian', coalesce(buildnum, '')), 'D')));
     CREATE INDEX idnx_fias_address_object_help_search_aoguid ON fias_address_object_help_search (aoguid);
     CREATE INDEX idnx_fias_address_object_help_search_regioncode ON fias_address_object_help_search (regioncode);
     CREATE INDEX indx_fias_address_object_help_search_ao_count ON fias_address_object_help_search (ao_count);
