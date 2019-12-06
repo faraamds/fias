@@ -40,8 +40,12 @@ abstract class AbstractImport
                 'previd' => null,
             ]);
 
+        echo("done\nCreating house room tmp table ...");
+        DB::select('select * from fias_address_create_house_room_table()');
         echo("done\nCreating address search table ...");
         DB::select('select * from fias_address_fill_help_search_table_address_full()');
+        echo("done\nDeleting house room tmp table ...");
+        DB::delete('drop table fias_house_room_tmp');
         echo("done\n");
     }
 }
