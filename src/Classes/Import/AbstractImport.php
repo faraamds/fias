@@ -29,7 +29,7 @@ abstract class AbstractImport
 
         echo("done\nRemoving bad references in address_object table ...");
         AddressObject::whereNotNull('nextid')
-            ->whereRaw('NOT EXISTS (SELECT 1 FROM fias_address_object fa WHERE fa.aoid=fias_address_object.nextid)')            ->whereRaw('nextid NOT IN (' . AddressObject::select('aoid')->toSql() . ')')
+            ->whereRaw('NOT EXISTS (SELECT 1 FROM fias_address_object fa WHERE fa.aoid=fias_address_object.nextid)')
             ->update([
                 'nextid' => null,
             ]);
