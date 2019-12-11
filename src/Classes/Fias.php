@@ -13,6 +13,7 @@ use faraamds\fias\Models\AddressObject;
 use faraamds\fias\Models\House;
 use faraamds\fias\Models\Room;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -137,5 +138,31 @@ class Fias
     public function getRoomByGuid(string $guid) : Room
     {
         return Room::where('roomguid', $guid)->orderByDesc('enddate')->first();
+    }
+
+    /**
+     * @param string $houseguid
+     * @return string|null
+     */
+    public function getAddressByHouseguid(string $houseguid) : ?string
+    {
+        /** @var House $house */
+        $house = House::where('houseguid', $houseguid)->orderByDesc('enddate')->first();
+        if (!$house) {
+            return null;
+        }
+        $address_row = Arr::first(DB::select('select * from fias_address_formal(?) str', [$house->aoguid]));
+        if (!$address_row) {
+            return null;
+        }
+        $address = $address_row->str;
+        $address .= ", дом {$house->housenum}";
+        if ($house->buildnum) {
+            $address .= ", корпус {$house->buildnum}";
+        }
+        if ($house->strucnum) {
+            $address .= ", строение {$house->strucnum}";
+        }
+        return $address;
     }
 }

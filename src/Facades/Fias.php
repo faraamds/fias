@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static House                  getHouseByGuid(string $guid)
  * @method static Room                   getRoomByGuid(string $guid)
  * @method static array                  getAoChainByGuid(string $guid, string $keywords = null)
+ * @method static string|null            getAddressByHouseguid(string $houseguid)
  */
 class Fias extends Facade
 {
