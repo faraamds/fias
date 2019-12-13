@@ -6,9 +6,15 @@ DECLARE
     var_result TEXT;
     var_or_query tsquery;
     var_guid UUID;
+    var_ex TEXT;
 BEGIN
 
-    var_or_query := ((replace(plainto_tsquery('russian', in_q)::TEXT, ' & ', ':* | ') || ':*')::tsquery);
+    var_ex := replace(plainto_tsquery('russian', in_q)::TEXT, ' & ', ':* & ');
+    IF var_ex = '' THEN
+        var_or_query := var_ex::tsquery;
+    ELSE
+        var_or_query := concat(var_ex, ':*')::tsquery;
+    end if;
 
     SELECT * INTO var_address_object
         FROM fias_address_object

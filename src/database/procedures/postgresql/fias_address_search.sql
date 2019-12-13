@@ -10,16 +10,9 @@ BEGIN
             SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit);
     ELSE
 
-        IF (SELECT COUNT(*) > 0 FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit) q
-            WHERE q.houseguid IS NULL) THEN
-
             RETURN QUERY
                 SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit) q
                     WHERE q.houseguid IS NULL;
-        ELSE
-            RETURN QUERY
-                SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit);
-        END IF;
 
     END IF;
 

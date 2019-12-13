@@ -3,10 +3,21 @@ CREATE OR REPLACE FUNCTION fias_address_search_not_filtered(in_q TEXT, in_region
 DECLARE
 
     var_query tsquery;
+    var_ex text;
 
 BEGIN
 
-    var_query := concat(replace(plainto_tsquery('russian', in_q)::TEXT, ' & ', ':* & '), ':*')::tsquery;
+    IF (SELECT COUNT(*) < 2 FROM regexp_split_to_table(plainto_tsquery('russian', in_q)::TEXT, ' & ') ) THEN
+        RETURN;
+    END IF;
+
+    var_ex := replace(plainto_tsquery('russian', in_q)::TEXT, ' & ', ':* & ');
+    IF var_ex = '' THEN
+        var_query := var_ex::tsquery;
+    ELSE
+        var_query := concat(var_ex, ':*')::tsquery;
+    end if;
+
 
     RETURN QUERY
           SELECT fias_address_object_help_search.aoguid, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid,
@@ -25,11 +36,7 @@ BEGIN
                                           || setweight(to_tsvector('russian', coalesce(house, '')), 'B')
                                           || setweight(to_tsvector('russian', coalesce(flatnumber, '')), 'C')
                                           || setweight(to_tsvector('russian', coalesce(buildnum, '')), 'D')),
-                                    var_query) DESC,
-                   address,
-                   case when house is null or REGEXP_REPLACE(house, '(-\d+|/\d+|\D)', '', 'g') = '' THEN null ELSE REGEXP_REPLACE(house, '(-\d+|/\d+|\D)', '', 'g')::bigint end,
-                   case when buildnum is null or REGEXP_REPLACE(buildnum, '(-\d+|/\d+|\D)', '', 'g') = '' THEN null ELSE REGEXP_REPLACE(buildnum, '(-\d+|/\d+|\D)', '', 'g')::bigint end,
-                   case when flatnumber is null or REGEXP_REPLACE(flatnumber, '(-\d+|/\d+|\D)', '', 'g') = '' THEN null ELSE REGEXP_REPLACE(flatnumber, '(-\d+|/\d+|\D)', '', 'g')::bigint end
+                                    var_query) DESC
 
           LIMIT in_limit;
 
