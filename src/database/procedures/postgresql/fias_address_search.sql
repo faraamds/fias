@@ -4,25 +4,24 @@ DECLARE
 
 BEGIN
 
-    RETURN QUERY
-          SELECT fias_address_object_help_search.aoguid, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid,
-                 (SELECT * FROM fias_address_house_room(fias_address_object_help_search.aoguid, in_q, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid)) as actual_address
-          FROM fias_address_object_help_search,
-               plainto_tsquery('russian', in_q) as q
+    IF (select count(*) > 0 from regexp_matches(in_q, '\d')) THEN
 
-          WHERE CASE WHEN in_regioncode IS NOT NULL THEN fias_address_object_help_search.regioncode=in_regioncode ELSE 1=1 END
-          AND (setweight(to_tsvector('russian', coalesce(address, '')), 'A')
-                   || setweight(to_tsvector('russian', coalesce(house, '')), 'B')
-                   || setweight(to_tsvector('russian', coalesce(flatnumber, '')), 'C')
-                   || setweight(to_tsvector('russian', coalesce(buildnum, '')), 'D'))
-                 @@ q
+        RETURN QUERY
+            SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit);
+    ELSE
 
-          ORDER BY ao_count, ts_rank_cd((setweight(to_tsvector('russian', coalesce(address, '')), 'A')
-                                          || setweight(to_tsvector('russian', coalesce(house, '')), 'B')
-                                          || setweight(to_tsvector('russian', coalesce(flatnumber, '')), 'C')
-                                          || setweight(to_tsvector('russian', coalesce(buildnum, '')), 'D')),
-                                    q) DESC
-          LIMIT in_limit;
+        IF (SELECT COUNT(*) > 0 FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit) q
+            WHERE q.houseguid IS NULL) THEN
+
+            RETURN QUERY
+                SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit) q
+                    WHERE q.houseguid IS NULL;
+        ELSE
+            RETURN QUERY
+                SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit);
+        END IF;
+
+    END IF;
 
 END;
 

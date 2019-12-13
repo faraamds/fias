@@ -8,7 +8,7 @@ DECLARE
     var_guid UUID;
 BEGIN
 
-    var_or_query := (replace(plainto_tsquery('russian', in_q)::TEXT, '&', '|')::tsquery);
+    var_or_query := ((replace(plainto_tsquery('russian', in_q)::TEXT, ' & ', ':* | ') || ':*')::tsquery);
 
     SELECT * INTO var_address_object
         FROM fias_address_object
