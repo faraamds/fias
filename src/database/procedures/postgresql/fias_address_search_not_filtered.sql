@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fias_address_search_not_filtered(in_q TEXT, in_regioncode VARCHAR(2) DEFAULT NULL, in_limit INT DEFAULT 50)
+CREATE OR REPLACE FUNCTION fias_address_search_not_filtered(in_q TEXT, in_regioncode VARCHAR(2) DEFAULT NULL, in_limit INT DEFAULT 50, in_exclude_huiseguid BOOL DEFAULT FALSE)
     RETURNS TABLE(aoguid UUID, houseguid UUID, roomguid UUID, actual_address TEXT) AS $BODY$
 DECLARE
 
@@ -25,6 +25,7 @@ BEGIN
           FROM fias_address_object_help_search
 
           WHERE CASE WHEN in_regioncode IS NOT NULL THEN fias_address_object_help_search.regioncode=in_regioncode ELSE 1=1 END
+          AND CASE WHEN in_exclude_huiseguid THEN fias_address_object_help_search.houseguid IS NULL ELSE 1=1 END
           AND (setweight(to_tsvector('russian', coalesce(address, '')), 'A')
                    || setweight(to_tsvector('russian', coalesce(house, '')), 'B')
                    || setweight(to_tsvector('russian', coalesce(flatnumber, '')), 'C')
@@ -36,7 +37,10 @@ BEGIN
                                           || setweight(to_tsvector('russian', coalesce(house, '')), 'B')
                                           || setweight(to_tsvector('russian', coalesce(flatnumber, '')), 'C')
                                           || setweight(to_tsvector('russian', coalesce(buildnum, '')), 'D')),
-                                    var_query) DESC
+                                    var_query) DESC,
+                   house,
+                   buildnum,
+                   flatnumber
 
           LIMIT in_limit;
 

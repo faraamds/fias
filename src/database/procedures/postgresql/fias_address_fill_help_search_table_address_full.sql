@@ -51,6 +51,7 @@ BEGIN
 
     CREATE INDEX idnx_fias_address_object_help_search_address on fias_address_object_help_search  USING GIN((setweight(to_tsvector('russian', coalesce(address, '')), 'A') || setweight(to_tsvector('russian', coalesce(house, '')), 'B') || setweight(to_tsvector('russian', coalesce(flatnumber, '')), 'C') || setweight(to_tsvector('russian', coalesce(buildnum, '')), 'D')));
     CREATE INDEX idnx_fias_address_object_help_search_aoguid ON fias_address_object_help_search (aoguid);
+    CREATE INDEX idnx_fias_address_object_help_search_houseguid ON fias_address_object_help_search (houseguid);
     CREATE INDEX idnx_fias_address_object_help_search_regioncode ON fias_address_object_help_search (regioncode);
     CREATE INDEX indx_fias_address_object_help_search_ao_count ON fias_address_object_help_search (ao_count);
 

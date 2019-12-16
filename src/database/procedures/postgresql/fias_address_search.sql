@@ -11,8 +11,7 @@ BEGIN
     ELSE
 
             RETURN QUERY
-                SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit) q
-                    WHERE q.houseguid IS NULL;
+                SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit, true);
 
     END IF;
 
