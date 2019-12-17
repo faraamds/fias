@@ -25,7 +25,7 @@ BEGIN
     (aoguid UUID NOT NULL, houseguid UUID, roomguid UUID, regioncode VARCHAR(2),
      ao_count INT, address TEXT, house VARCHAR(255), flatnumber VARCHAR(255), buildnum varchar(255));
 
-    FOR var_aoguid, var_regioncode IN SELECT MIN(aoguid::TEXT), MIN(regioncode) FROM fias_address_object GROUP BY aoguid LOOP
+    FOR var_aoguid, var_regioncode IN SELECT aoguid::TEXT, MIN(regioncode) FROM fias_address_object GROUP BY aoguid LOOP
 
             var_search_result := fias_address_formal_whole_history_with_count(var_aoguid::UUID);
             var_houseguid := NULL;
