@@ -16,7 +16,8 @@ class Search
     public static function byAddress(string $address, string $region = null) : array
     {
         $best_candidate = null;
-        $addresses = DB::select('SELECT * FROM fias_address_search(?, ?)', [$address, $region]);
+        $query_string = Query::toTsQuery($address);
+        $addresses = DB::select('SELECT * FROM fias_address_search(?, ?)', [$query_string, $region]);
 
         return compact('addresses');
     }

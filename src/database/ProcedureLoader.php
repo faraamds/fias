@@ -29,7 +29,7 @@ class ProcedureLoader
         $files = $this->getProcedureFiles();
 
         foreach ($files as $file) {
-
+            DB::unprepared('DROP FUNCTION IF EXISTS ' . pathinfo($file, PATHINFO_FILENAME));
             DB::unprepared($this->filesystem->get($file));
         }
     }

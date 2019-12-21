@@ -7,11 +7,15 @@ BEGIN
     IF (select count(*) > 0 from regexp_matches(in_q, '\d')) THEN
 
         RETURN QUERY
-            SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit);
+            SELECT r.aoguid, r.houseguid, r.roomguid, r.actual_address
+            FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit) r
+            ORDER BY r.ao_count, r.rank;
     ELSE
 
             RETURN QUERY
-                SELECT * FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit, true);
+                SELECT r.aoguid, r.houseguid, r.roomguid, r.actual_address
+                FROM fias_address_search_not_filtered(in_q, in_regioncode, in_limit, true) r
+                ORDER BY r.ao_count, r.rank;
 
     END IF;
 

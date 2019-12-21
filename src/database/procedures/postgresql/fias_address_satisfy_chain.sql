@@ -8,7 +8,7 @@ DECLARE
     i INT := 1;
 BEGIN
 
-    var_or_query := (replace(plainto_tsquery('russian', in_q)::TEXT, '&', '|')::tsquery);
+    var_or_query := (replace(fias_get_tsquery(in_q)::TEXT, '&', '|')::tsquery);
 
     SELECT * INTO var_address_object
         FROM fias_address_object

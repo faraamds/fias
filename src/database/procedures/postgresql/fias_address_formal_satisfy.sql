@@ -6,24 +6,18 @@ DECLARE
     var_result TEXT;
     var_or_query tsquery;
     var_guid UUID;
-    var_ex TEXT;
+    var_ex_formalname TEXT;
+    var_ao_name TEXT;
+
 BEGIN
+    var_or_query := (replace(in_q, ' & ', ' | '))::tsquery;
 
-    var_ex := replace(plainto_tsquery('russian', in_q)::TEXT, ' & ', ':* & ');
-    IF var_ex = '' THEN
-        var_or_query := var_ex::tsquery;
-    ELSE
-        var_or_query := concat(var_ex, ':*')::tsquery;
-    end if;
-
-    SELECT * INTO var_address_object
+    SELECT formalname INTO var_ex_formalname
         FROM fias_address_object
         WHERE aoguid = in_aoguid
         AND to_tsvector('russian', formalname) @@ var_or_query
         ORDER BY enddate DESC
         LIMIT 1;
-
-    IF var_address_object IS NULL THEN
 
         SELECT * INTO var_address_object
         FROM fias_address_object
@@ -31,32 +25,34 @@ BEGIN
         ORDER BY enddate DESC
         LIMIT 1;
 
-    END IF;
-
     var_result := concat(var_address_object.formalname, ' ', var_address_object.shortname);
+    IF var_ex_formalname != var_address_object.formalname THEN
+        var_result := var_result || ' (бывш. ' || var_ex_formalname || ')';
+    END IF;
 
     WHILE var_address_object.parentguid IS NOT NULL
         LOOP
             var_guid := var_address_object.parentguid;
 
-            SELECT * INTO var_address_object
+            SELECT formalname INTO var_ex_formalname
             FROM fias_address_object
             WHERE aoguid = var_guid
               AND to_tsvector('russian', formalname) @@ var_or_query
             ORDER BY enddate DESC
             LIMIT 1;
 
-            IF var_address_object IS NULL THEN
+            SELECT * INTO var_address_object
+            FROM fias_address_object
+            WHERE aoguid = var_guid
+            ORDER BY enddate DESC
+            LIMIT 1;
 
-                SELECT * INTO var_address_object
-                FROM fias_address_object
-                WHERE aoguid = var_guid
-                ORDER BY enddate DESC
-                LIMIT 1;
-
+            var_ao_name := concat(var_address_object.formalname, ' ', var_address_object.shortname);
+            IF var_ex_formalname != var_address_object.formalname THEN
+                var_ao_name := var_ao_name || ' (бывш. ' || var_ex_formalname || ')';
             END IF;
 
-            var_result := concat(var_address_object.formalname, ' ', var_address_object.shortname, ', ', var_result);
+            var_result := concat(var_ao_name, ', ', var_result);
 
         END LOOP;
 
