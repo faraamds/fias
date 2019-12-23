@@ -96,7 +96,7 @@ class Query
     protected function extractQuotedStrings() : self
     {
         $quoted = [];
-        preg_match_all('/[\'\"][\w\d\s]+[\'\"]/u', $this->query, $quoted);
+        preg_match_all('/[\'\"].+[\'\"]/uU', $this->query, $quoted);
         $this->quoted = $quoted[0];
 
         return $this;
