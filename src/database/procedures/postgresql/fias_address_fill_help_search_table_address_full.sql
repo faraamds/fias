@@ -20,10 +20,10 @@ BEGIN
                 setweight(to_tsvector('russian', coalesce(hrt.buildnum, '')), 'D'))
         FROM fias_house_room_tmp hrt JOIN fias_ao_tmp at ON hrt.aoguid=at.aoguid;
 
-
+    raise notice 'creating address vector index';
 --     CREATE INDEX idnx_fias_address_object_help_search_address_gin on fias_address_object_help_search  USING GIN(vector);
 ----     CREATE INDEX idnx_fias_address_object_help_search_address_rum on fias_address_object_help_search  USING rum(vector rum_tsvector_ops);
---     CREATE INDEX idnx_fias_address_object_help_search_address_rum on fias_address_object_help_search  USING rum(vector rum_tsvector_addon_ops, ao_count rum_int4_ops) WITH (attach = 'ao_count', to = 'vector');
+    CREATE INDEX idnx_fias_address_object_help_search_address_rum on fias_address_object_help_search  USING rum(vector rum_tsvector_addon_ops, ao_count rum_int4_ops) WITH (attach = 'ao_count', to = 'vector');
     raise notice 'creating aoguid index';
     CREATE INDEX idnx_fias_address_object_help_search_aoguid ON fias_address_object_help_search (aoguid);
     raise notice 'creating houseguid index';
