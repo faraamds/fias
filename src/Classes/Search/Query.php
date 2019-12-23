@@ -46,7 +46,18 @@ class Query
      */
     protected function toString()
     {
-        return implode(' & ', $this->result);
+        return implode(' & ', $this->filter($this->result));
+    }
+
+    /**
+     * @param array $arr
+     * @return array
+     */
+    protected function filter(array $arr): array
+    {
+        return array_filter($arr, function ($item) {
+            return trim((string)$item) !== '';
+        });
     }
 
     /**

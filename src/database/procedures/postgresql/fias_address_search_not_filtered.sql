@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fias_address_search_not_filtered(in_q TEXT, in_regioncode VARCHAR(2) DEFAULT NULL, in_limit INT DEFAULT 50, in_exclude_huiseguid BOOL DEFAULT FALSE)
+CREATE OR REPLACE FUNCTION fias_address_search_not_filtered(in_q TEXT, in_regioncode VARCHAR(2) DEFAULT NULL, in_limit INT DEFAULT 50, in_exclude_huiseguid BOOL DEFAULT FALSE, in_whole_words BOOL DEFAULT FALSE)
     RETURNS TABLE(aoguid UUID, houseguid UUID, roomguid UUID, actual_address TEXT, rank REAL, ao_count INT) AS $BODY$
 DECLARE
 
@@ -6,7 +6,11 @@ DECLARE
 
 BEGIN
 
-    var_query := to_tsquery(in_q);
+    IF in_whole_words THEN
+        var_query := plainto_tsquery(in_q);
+    ELSE
+        var_query := to_tsquery(in_q);
+    END IF;
 
     RETURN QUERY
           SELECT fias_address_object_help_search.aoguid, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid,

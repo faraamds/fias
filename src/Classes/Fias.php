@@ -49,6 +49,16 @@ class Fias
     }
 
     /**
+     * @param string $address
+     * @param string|null $region
+     * @return array
+     */
+    public function searchByAddressWholeWords(string $address, string $region = null) : array
+    {
+        return Search::byAddressWholeWords($address, $region);
+    }
+
+    /**
      * @param string $aoguid
      * @param string $house
      * @param string|null $building

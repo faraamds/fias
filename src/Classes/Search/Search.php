@@ -23,6 +23,19 @@ class Search
     }
 
     /**
+     * @param string $address
+     * @param string|null $region
+     * @return array
+     */
+    public static function byAddressWholeWords(string $address, string $region = null) : array
+    {
+        $best_candidate = null;
+        $addresses = DB::select('SELECT * FROM fias_address_search_whole_words(?, ?)', [$address, $region]);
+
+        return compact('addresses');
+    }
+
+    /**
      * @param string $aoguid
      * @param string $house
      * @param string|null $building
