@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fias_address_house_room(in_aoguid UUID, in_q TEXT, in_houseguid UUID DEFAULT NULL, in_roomguid UUID DEFAULT NULL)
+CREATE OR REPLACE FUNCTION fias_address_house_room(in_aoguid UUID, in_q tsquery, in_houseguid UUID DEFAULT NULL, in_roomguid UUID DEFAULT NULL)
     RETURNS TEXT AS $BODY$
 DECLARE
 

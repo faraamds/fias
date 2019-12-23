@@ -14,7 +14,7 @@ BEGIN
 
     RETURN QUERY
           SELECT fias_address_object_help_search.aoguid, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid,
-                 (SELECT * FROM fias_address_house_room(fias_address_object_help_search.aoguid, in_q, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid)) as actual_address,
+                 (SELECT * FROM fias_address_house_room(fias_address_object_help_search.aoguid, var_query, fias_address_object_help_search.houseguid, fias_address_object_help_search.roomguid)) as actual_address,
                  fias_address_object_help_search.vector <=> var_query as rank,
                  fias_address_object_help_search.ao_count
           FROM fias_address_object_help_search

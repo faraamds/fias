@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fias_address_formal_satisfy(in_aoguid UUID, in_q TEXT)
+CREATE OR REPLACE FUNCTION fias_address_formal_satisfy(in_aoguid UUID, in_q tsquery)
     RETURNS TEXT AS $BODY$
 DECLARE
 
@@ -10,7 +10,7 @@ DECLARE
     var_ao_name TEXT;
 
 BEGIN
-    var_or_query := (replace(in_q, ' & ', ' | '))::tsquery;
+    var_or_query := (replace(in_q::TEXT, ' & ', ' | '))::tsquery;
 
     SELECT formalname INTO var_ex_formalname
         FROM fias_address_object
