@@ -4,14 +4,16 @@ DECLARE
 
 BEGIN
     DROP TABLE IF EXISTS fias_house_room_tmp;
-    CREATE TABLE fias_house_room_tmp (aoguid UUID, houseguid UUID, roomguid UUID, house TEXT, buildnum TEXT, flatnumber TEXT, ao_count INT);
+    CREATE TABLE fias_house_room_tmp (aoguid UUID, houseguid UUID, roomguid UUID, house TEXT, buildnum TEXT,
+    flatnumber TEXT, address TEXT, ao_count INT);
 
     INSERT INTO fias_house_room_tmp
-        SELECT aoguid, houseguid, null, house, buildnum, null, 100
+        SELECT aoguid, houseguid, null, house, buildnum, null, address, 100
         FROM fias_house_tmp;
 
     INSERT INTO fias_house_room_tmp
-        SELECT ht.aoguid, rt.houseguid, rt.roomguid, ht.house, ht.buildnum, rt.flatnumber, 200
+        SELECT ht.aoguid, rt.houseguid, rt.roomguid, ht.house, ht.buildnum, rt.flatnumber,
+               ht.address || ', ' || rt.address, 200
         FROM fias_room_tmp rt JOIN fias_house_tmp ht ON rt.houseguid = ht.houseguid;
 
     RAISE NOTICE 'Creating index';

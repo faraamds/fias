@@ -6,19 +6,24 @@ DECLARE
     var_regioncode VARCHAR(2);
     var_i INT :=0;
     var_search_result TEXT[];
+    var_actual_address TEXT;
 
 BEGIN
 
     DROP TABLE IF EXISTS fias_ao_tmp;
     CREATE TABLE fias_ao_tmp
-    (aoguid UUID NOT NULL, regioncode VARCHAR(2), ao_count INT, address TEXT);
+    (aoguid UUID NOT NULL, regioncode VARCHAR(2), ao_count INT, address TEXT, actual_address TEXT);
 
     FOR var_aoguid, var_regioncode IN SELECT aoguid::TEXT, MIN(regioncode) FROM fias_address_object GROUP BY aoguid LOOP
 
             var_search_result := fias_address_formal_whole_history_with_count(var_aoguid::UUID);
+            var_actual_address := fias_address_formal(var_aoguid::UUID);
 
-            INSERT into fias_ao_tmp (aoguid, regioncode, ao_count, address)
-            VALUES (var_aoguid::UUID, var_regioncode, var_search_result[2]::INT, coalesce(var_search_result[1], ''));
+            INSERT into fias_ao_tmp (aoguid, regioncode, ao_count, address, actual_address)
+            VALUES (var_aoguid::UUID, var_regioncode, var_search_result[2]::INT,
+                    coalesce(var_search_result[1], ''),
+                    coalesce(var_actual_address, '')
+                    );
 
             var_i:=var_i+1;
 

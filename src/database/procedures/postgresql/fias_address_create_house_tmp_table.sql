@@ -12,7 +12,7 @@ BEGIN
 
     DROP TABLE IF EXISTS fias_house_tmp;
     CREATE TABLE fias_house_tmp
-    (aoguid UUID, houseguid UUID, house TEXT, buildnum TEXT);
+    (aoguid UUID, houseguid UUID, house TEXT, buildnum TEXT, address TEXT);
 
     FOR var_aoguid, var_houseguid, var_house, var_building, var_structure
         IN SELECT MIN(aoguid::TEXT)::UUID, houseguid,
@@ -22,11 +22,15 @@ BEGIN
            FROM fias_house GROUP BY houseguid
     LOOP
 
-        INSERT INTO fias_house_tmp (aoguid, houseguid, house, buildnum)
+        INSERT INTO fias_house_tmp (aoguid, houseguid, house, buildnum, address)
         VALUES (var_aoguid, var_houseguid,
                 (CASE WHEN var_house IS NULL THEN '' ELSE 'д дом ' || var_house END),
                 (CASE WHEN var_building IS NULL THEN '' ELSE 'к корп корпус ' || var_building END ||
-                 CASE WHEN var_structure IS NULL THEN '' ELSE ', стр строение ' || var_structure END));
+                 CASE WHEN var_structure IS NULL THEN '' ELSE ', стр строение ' || var_structure END),
+                (CASE WHEN var_house IS NULL THEN '' ELSE 'дом ' || var_house END ||
+                 CASE WHEN var_building IS NULL THEN '' ELSE ', корп ' || var_building END ||
+                 CASE WHEN var_structure IS NULL THEN '' ELSE ', строение ' || var_structure END)
+                 );
 
     END LOOP;
 
