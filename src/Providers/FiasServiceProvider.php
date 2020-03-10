@@ -58,7 +58,7 @@ class FiasServiceProvider extends ServiceProvider
          */
         $this->mergeConfigFrom(
             __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
-                 . 'config' . DIRECTORY_SEPARATOR . 'settings.php',
+                 . 'config' . DIRECTORY_SEPARATOR . 'sphinx.php',
             'database.connections.sphinx'
         );
     }
