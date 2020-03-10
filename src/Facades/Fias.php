@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static void                   import(string $path = null)
  * @method static void                   update(string $path = null)
- * @method static array                  searchByAddress(string $address, string $region = null)
- * @method static array                  searchByAddressWholeWords(string $address, string $region = null)
+ * @method static array                  searchByAddress(string $address, string $region = null, int $limit = 10)
+ * @method static array                  searchByAddressWholeWords(string $address, string $region = null, int $limit = 10)
  * @method static SearchHouseRoomResult  searchHouseAndRoom(string $aoguid, string $house, string $building = null, string $structure = null, string $room = null)
  * @method static SearchAddressResult    getFullInfo(string $aoguid, string $houseguid = null, string $roomguid = null)
  * @method static Collection             getHousesByAoguid(string $aoguid)

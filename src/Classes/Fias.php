@@ -43,9 +43,9 @@ class Fias
      * @param string|null $region
      * @return array
      */
-    public function searchByAddress(string $address, string $region = null) : array
+    public function searchByAddress(string $address, string $region = null, int $limit = 10) : array
     {
-        return Search::byAddress($address, $region);
+        return Search::byAddress($address, $region, $limit);
     }
 
     /**
@@ -53,9 +53,9 @@ class Fias
      * @param string|null $region
      * @return array
      */
-    public function searchByAddressWholeWords(string $address, string $region = null) : array
+    public function searchByAddressWholeWords(string $address, string $region = null, int $limit = 10) : array
     {
-        return Search::byAddressWholeWords($address, $region);
+        return Search::byAddressWholeWords($address, $region, $limit);
     }
 
     /**
