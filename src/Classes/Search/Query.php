@@ -9,6 +9,9 @@ namespace faraamds\fias\Classes\Search;
  */
 class Query
 {
+    /** @var bool */
+    protected bool $whole_words;
+    
     /** @var string $query */
     protected string $query;
 
@@ -25,18 +28,19 @@ class Query
      * Query constructor.
      * @param string $query
      */
-    public function __construct(string $query)
+    public function __construct(string $query, bool $whole_words = false)
     {
         $this->query = $query;
+        $this->whole_words = $whole_words;
     }
 
     /**
      * @param string $query
      * @return string
      */
-    public static function toQuery(string $query) : CompositeQuery
+    public static function toQuery(string $query, bool $whole_words = false) : CompositeQuery
     {
-        $query = (new Query($query))
+        $query = (new Query($query, $whole_words))
             ->extractAndProcessQuotedStrings()
             ->extractAndProcessOtherStrings();
 
@@ -91,7 +95,7 @@ class Query
                 if (empty($lex)) {
                     continue;
                 }
-                if ($this->hasNoDigit($lex)) {
+                if ($this->hasNoDigit($lex) && !$this->whole_words) {
                     $pgsql_lex =  $lex . ':*';
                     $sphinx_lex = $lex . '*';
                 } else {

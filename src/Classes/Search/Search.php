@@ -29,7 +29,9 @@ class Search
      */
     public static function byAddressWholeWords(string $address, string $region = null) : array
     {
-        $addresses = SphinxSearch::search($address);
+        $query = Query::toQuery($address, true);
+
+        $addresses = SphinxSearch::search($query);
 
         return compact('addresses');
     }
