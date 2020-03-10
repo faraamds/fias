@@ -1,5 +1,5 @@
-CREATE OR REPLACE FUNCTION fias_get_search_by_ids(in_ids BIGINT[])
-    RETURNS TABLE(out_aoguid UUID, out_houseguid UUID, out_roomguid UUID, out_address TEXT) AS $BODY$
+CREATE OR REPLACE FUNCTION fias_get_search_by_ids(in_ids BIGINT[], in_check_query TEXT)
+    RETURNS TABLE(aoguid UUID, houseguid UUID, roomguid UUID, actual_address TEXT) AS $BODY$
 DECLARE
 
     var_id BIGINT;
@@ -8,8 +8,10 @@ BEGIN
 
     FOREACH var_id IN ARRAY in_ids
     LOOP
-        SELECT aoguid, houseguid, roomguid, address INTO out_aoguid, out_houseguid, out_roomguid, out_address
-        FROM fias_address_object_help_search
+        SELECT fhs.aoguid, fhs.houseguid, fhs.roomguid,
+               fias_address_house_room(fhs.aoguid, to_tsquery(in_check_query), fhs.houseguid, fhs.roomguid)
+            INTO aoguid, houseguid, roomguid, actual_address
+        FROM fias_address_object_help_search fhs
         WHERE id = var_id;
 
         RETURN NEXT;

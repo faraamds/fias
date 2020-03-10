@@ -11,7 +11,7 @@ BEGIN
 
     DROP TABLE IF EXISTS fias_room_tmp;
     CREATE TABLE fias_room_tmp
-    (roomguid UUID, houseguid UUID, flatnumber TEXT, address TEXT);
+    (roomguid UUID, houseguid UUID, flatnumber TEXT, ao_count SMALLINT);
 
     FOR var_houseguid, var_roomguid, var_flatnumber, var_roomnumber
         IN SELECT MIN(houseguid::TEXT)::UUID, roomguid,
@@ -20,12 +20,12 @@ BEGIN
            FROM fias_room GROUP BY roomguid
     LOOP
 
-        INSERT INTO fias_room_tmp (roomguid, houseguid, flatnumber, address)
+        INSERT INTO fias_room_tmp (roomguid, houseguid, flatnumber, ao_count)
         VALUES (var_roomguid, var_houseguid,
                 (CASE WHEN var_flatnumber IS NULL THEN '' ELSE ' кв квартира ' || var_flatnumber END ||
                  CASE WHEN var_roomnumber IS NULL THEN '' ELSE ', ком комната ' || var_roomnumber END),
-                (CASE WHEN var_flatnumber IS NULL THEN '' ELSE ' квартира ' || var_flatnumber END ||
-                 CASE WHEN var_roomnumber IS NULL THEN '' ELSE ', комната ' || var_roomnumber END)
+                (200 +
+                 (CASE WHEN var_roomnumber IS NULL THEN 0 ELSE 10 END))
                  );
 
     END LOOP;

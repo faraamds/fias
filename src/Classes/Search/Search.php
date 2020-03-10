@@ -15,12 +15,9 @@ class Search
      */
     public static function byAddress(string $address, string $region = null) : array
     {
-        $best_candidate = null;
-        $query_string = Query::toTsQuery($address);
-        $addresses = DB::select('SELECT * FROM fias_address_search_short(?, ?)', [$query_string, $region]);
-        if (count($addresses) === 0) {
-            $addresses = DB::select('SELECT * FROM fias_address_search(?, ?)', [$query_string, $region]);
-        }
+        $query = Query::toQuery($address);
+
+        $addresses = SphinxSearch::search($query);
 
         return compact('addresses');
     }
@@ -32,11 +29,7 @@ class Search
      */
     public static function byAddressWholeWords(string $address, string $region = null) : array
     {
-        $best_candidate = null;
-        $addresses = DB::select('SELECT * FROM fias_address_search_whole_words_short(?, ?)', [$address, $region]);
-        if (count($addresses) === 0) {
-            $addresses = DB::select('SELECT * FROM fias_address_search_whole_words(?, ?)', [$address, $region]);
-        }
+        $addresses = SphinxSearch::search($address);
 
         return compact('addresses');
     }

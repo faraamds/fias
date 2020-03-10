@@ -58,8 +58,6 @@ abstract class AbstractImport
         DB::delete('drop table fias_ao_tmp');
         echo("done\nDeleting house room tmp table ...");
         DB::delete('drop table fias_house_room_tmp');
-        echo("done\nCreating short address search table ...");
-        DB::select('select * from fias_address_create_help_search_short_table()');
         echo("done\n");
     }
 }

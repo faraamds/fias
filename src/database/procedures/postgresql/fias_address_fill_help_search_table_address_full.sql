@@ -9,19 +9,20 @@ BEGIN
     CREATE SEQUENCE fias_address_object_help_search_seq;
     CREATE TABLE fias_address_object_help_search
     (id BIGINT, aoguid UUID NOT NULL, houseguid UUID, roomguid UUID, regioncode VARCHAR(2),
-     ao_count INT, address TEXT, actual_address TEXT);
+     ao_count INT, address TEXT);
 
     INSERT INTO fias_address_object_help_search
         SELECT nextval('fias_address_object_help_search_seq'), aoguid, null,null,
-               regioncode, ao_count, address, actual_address
+               regioncode, ao_count, address
+--                , fias_address_formal(aoguid)
         FROM fias_ao_tmp;
 
     INSERT INTO fias_address_object_help_search
         SELECT nextval('fias_address_object_help_search_seq'),
-               hrt.aoguid, hrt.houseguid, hrt.roomguid,at.regioncode, hrt.ao_count+at.ao_count,
+               hrt.aoguid, hrt.houseguid, hrt.roomguid,at.regioncode, (hrt.ao_count+at.ao_count) as ao_count,
                (at.address || ', ' || coalesce(hrt.house, '') || ', ' || coalesce(hrt.flatnumber, '')
-                    || ', ' || coalesce(hrt.buildnum, '')),
-               (at.actual_address || ', ' || hrt.address)
+                    || ', ' || coalesce(hrt.buildnum, ''))
+--                , fias_address_house_room_actual(hrt.aoguid, hrt.houseguid, hrt.roomguid)
     FROM fias_house_room_tmp hrt JOIN fias_ao_tmp at ON hrt.aoguid=at.aoguid;
 
     raise notice 'creating id index';

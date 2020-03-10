@@ -15,8 +15,11 @@ class Query
     /** @var array $quoted */
     protected array $quoted;
 
-    /** @var array $result */
-    protected array $result = [];
+    /** @var array $pgsql_result */
+    protected array $pgsql_result = [];
+
+    /** @var array $sphinx_result */
+    protected array $sphinx_result = [];
 
     /**
      * Query constructor.
@@ -31,22 +34,29 @@ class Query
      * @param string $query
      * @return string
      */
-    public static function toTsQuery(string $query)
+    public static function toQuery(string $query) : CompositeQuery
     {
         $query = (new Query($query))
             ->extractAndProcessQuotedStrings()
-            ->extractAndProcessOtherStrings()
-            ->toString();
+            ->extractAndProcessOtherStrings();
 
-        return $query;
+        return new CompositeQuery($query->getPgsqlQuery(), $query->getSphinxQuery());
     }
 
     /**
      * @return string
      */
-    protected function toString()
+    protected function getPgsqlQuery() : string
     {
-        return implode(' & ', $this->filter($this->result));
+        return implode(' & ', $this->filter($this->pgsql_result));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSphinxQuery() : string
+    {
+        return implode(' ', $this->filter($this->sphinx_result));
     }
 
     /**
@@ -82,9 +92,14 @@ class Query
                     continue;
                 }
                 if ($this->hasNoDigit($lex)) {
-                    $lex .= ':*';
+                    $pgsql_lex =  $lex . ':*';
+                    $sphinx_lex = $lex . '*';
+                } else {
+                    $pgsql_lex = $lex;
+                    $sphinx_lex = $lex;
                 }
-                array_push($this->result, $lex);
+                array_push($this->pgsql_result, $pgsql_lex);
+                array_push($this->sphinx_result, $sphinx_lex);
             }
         }
         return $this;
@@ -109,8 +124,9 @@ class Query
     {
         foreach ($this->quoted as $lexeme) {
             $lexeme = $this->removeQuotes($lexeme);
+            array_push($this->sphinx_result, '"' . trim($lexeme) . '"');
             $lexeme = preg_replace('/\s+/', ' <-> ', trim($lexeme));
-            array_push($this->result, $lexeme);
+            array_push($this->pgsql_result, $lexeme);
         }
         return $this;
     }
