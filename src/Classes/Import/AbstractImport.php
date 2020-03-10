@@ -44,9 +44,9 @@ abstract class AbstractImport
         DB::select('select * from fias_address_create_house_tmp_table()');
         echo("done\nCreating room tmp table ...");
         DB::select('select * from fias_address_create_room_tmp_table()');
-        echo("done\nCreating house_room tmp table ...");
+        echo("done\nCreating fias_house_room_tmp table ...");
         DB::select('select * from fias_address_create_house_room_table()');
-        echo("done\nDeleting fias_room_tmp table ...");
+        echo("done\nDeleting fias_house_tmp table ...");
         DB::delete('drop table fias_house_tmp');
         echo("done\nDeleting fias_room_tmp table ...");
         DB::delete('drop table fias_room_tmp');
@@ -58,8 +58,6 @@ abstract class AbstractImport
         DB::delete('drop table fias_ao_tmp');
         echo("done\nDeleting house room tmp table ...");
         DB::delete('drop table fias_house_room_tmp');
-        echo("done\nCreating short address search table ...");
-        DB::select('select * from fias_address_create_help_search_short_table()');
         echo("done\n");
     }
 }

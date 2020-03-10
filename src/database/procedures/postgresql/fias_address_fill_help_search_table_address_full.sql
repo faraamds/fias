@@ -5,25 +5,28 @@ DECLARE
 BEGIN
 
     DROP TABLE IF EXISTS fias_address_object_help_search;
+    DROP SEQUENCE IF EXISTS fias_address_object_help_search_seq;
+    CREATE SEQUENCE fias_address_object_help_search_seq;
     CREATE TABLE fias_address_object_help_search
-    (aoguid UUID NOT NULL, houseguid UUID, roomguid UUID, regioncode VARCHAR(2),
-     ao_count INT, vector tsvector);
+    (id BIGINT, aoguid UUID NOT NULL, houseguid UUID, roomguid UUID, regioncode VARCHAR(2),
+     ao_count INT, address TEXT);
 
     INSERT INTO fias_address_object_help_search
-        SELECT aoguid, null,null, regioncode, ao_count, vector
+        SELECT nextval('fias_address_object_help_search_seq'), aoguid, null,null,
+               regioncode, ao_count, address
+--                , fias_address_formal(aoguid)
         FROM fias_ao_tmp;
 
     INSERT INTO fias_address_object_help_search
-        SELECT hrt.aoguid, hrt.houseguid, hrt.roomguid,at.regioncode, hrt.ao_count+at.ao_count,
-               (at.vector || setweight(to_tsvector('russian', coalesce(hrt.house, '')), 'B') || setweight(
-                       to_tsvector('russian', coalesce(hrt.flatnumber, '')), 'C') ||
-                setweight(to_tsvector('russian', coalesce(hrt.buildnum, '')), 'D'))
-        FROM fias_house_room_tmp hrt JOIN fias_ao_tmp at ON hrt.aoguid=at.aoguid;
+        SELECT nextval('fias_address_object_help_search_seq'),
+               hrt.aoguid, hrt.houseguid, hrt.roomguid,at.regioncode, (hrt.ao_count+at.ao_count) as ao_count,
+               (at.address || ', ' || coalesce(hrt.house, '') || ', ' || coalesce(hrt.flatnumber, '')
+                    || ', ' || coalesce(hrt.buildnum, ''))
+--                , fias_address_house_room_actual(hrt.aoguid, hrt.houseguid, hrt.roomguid)
+    FROM fias_house_room_tmp hrt JOIN fias_ao_tmp at ON hrt.aoguid=at.aoguid;
 
-    raise notice 'creating address vector index';
---     CREATE INDEX idnx_fias_address_object_help_search_address_gin on fias_address_object_help_search  USING GIN(vector);
-----     CREATE INDEX idnx_fias_address_object_help_search_address_rum on fias_address_object_help_search  USING rum(vector rum_tsvector_ops);
-    CREATE INDEX idnx_fias_address_object_help_search_address_rum on fias_address_object_help_search  USING rum(vector rum_tsvector_addon_ops, ao_count rum_int4_ops) WITH (attach = 'ao_count', to = 'vector');
+    raise notice 'creating id index';
+    CREATE INDEX idnx_fias_address_object_help_search_id ON fias_address_object_help_search (id);
     raise notice 'creating aoguid index';
     CREATE INDEX idnx_fias_address_object_help_search_aoguid ON fias_address_object_help_search (aoguid);
     raise notice 'creating houseguid index';
