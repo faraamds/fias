@@ -11,7 +11,7 @@ class Query
 {
     /** @var bool */
     protected bool $whole_words;
-    
+
     /** @var string $query */
     protected string $query;
 
@@ -95,7 +95,7 @@ class Query
                 if (empty($lex)) {
                     continue;
                 }
-                if ($this->hasNoDigit($lex) && !$this->whole_words) {
+                if ($this->hasNoDigit($lex) && !$this->whole_words && !$this->hasDash($lex)) {
                     $pgsql_lex =  $lex . ':*';
                     $sphinx_lex = $lex . '*';
                 } else {
@@ -171,5 +171,14 @@ class Query
     protected function hasNoDigit(string $string) : bool
     {
         return preg_match('/\D+/', $string);
+    }
+
+    /**
+     * @param string $string
+     * @return bool
+     */
+    protected function hasDash(string $string) : bool
+    {
+        return preg_match('/-/', $string);
     }
 }
