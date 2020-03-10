@@ -54,16 +54,13 @@ class FiasServiceProvider extends ServiceProvider
         $this->commands(['command.make-migrations', 'command.import', 'command.update', 'command.load-procedures']);
 
         /**
-         * Регистрируем подключение к Sphinxsearch 
+         * Регистрируем соединение к sphinxsearch
          */
-        $sphinx = [
-            'driver' => 'mysql',
-            'host' => env('SPHINX_HOST', '127.0.0.1'),
-            'port' => env('SPHINX_PORT', '9306'),
-            'database' => '',
-        ];
-
-        config(['database.connections.sphinx' => $sphinx]);
+        $this->mergeConfigFrom(
+            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
+                 . 'config' . DIRECTORY_SEPARATOR . 'settings.php',
+            'database.connections.sphinx'
+        );
     }
 
     /**
