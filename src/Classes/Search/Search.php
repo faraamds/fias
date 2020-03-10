@@ -13,11 +13,11 @@ class Search
      * @param string|null $region
      * @return array
      */
-    public static function byAddress(string $address, string $region = null) : array
+    public static function byAddress(string $address, string $region = null, int $limit = 10) : array
     {
         $query = Query::toQuery($address);
 
-        $addresses = SphinxSearch::search($query);
+        $addresses = SphinxSearch::search($query, $limit);
 
         return compact('addresses');
     }
@@ -27,11 +27,11 @@ class Search
      * @param string|null $region
      * @return array
      */
-    public static function byAddressWholeWords(string $address, string $region = null) : array
+    public static function byAddressWholeWords(string $address, string $region = null, int $limit = 10) : array
     {
         $query = Query::toQuery($address, true);
 
-        $addresses = SphinxSearch::search($query);
+        $addresses = SphinxSearch::search($query, $limit);
 
         return compact('addresses');
     }

@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class SphinxSearch
 {
-    public static function search(CompositeQuery $query) : array
+    public static function search(CompositeQuery $query, int $limit = 10) : array
     {
         $indexes = DB::connection('sphinx')
             ->table('fias_index')
             ->whereRaw("MATCH('{$query->sphinx_search_query}')")
             ->orderByRaw('ao_count asc')
             ->orderByRaw('WEIGHT() desc')
-            ->limit(10)
+            ->limit($limit)
             ->get();
 
         return DB::select(
