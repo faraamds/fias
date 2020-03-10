@@ -50,7 +50,7 @@ class MakeMigrations extends Command
      * @return void
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function handle()
+    public function handle() : void
     {
         $migrations = $this->generator->run($this->option('dir'));
 

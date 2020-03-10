@@ -30,7 +30,7 @@ class FiasImport extends Command
      */
     protected $description = 'Import data from xml';
 
-    public function handle()
+    public function handle() : void
     {
         $path = $this->option('path');
 

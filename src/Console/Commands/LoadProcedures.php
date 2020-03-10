@@ -51,7 +51,7 @@ class LoadProcedures extends Command
      * @return void
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function handle()
+    public function handle() : void
     {
         $this->loader->run();
     }
