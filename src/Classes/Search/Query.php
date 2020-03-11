@@ -95,12 +95,12 @@ class Query
                 if (empty($lex)) {
                     continue;
                 }
-                if ($this->hasNoDigit($lex) && !$this->whole_words && !$this->hasDash($lex)) {
+                if ($this->hasNoDigit($lex) && !$this->whole_words && !$this->hasSpecial($lex) ) {
                     $pgsql_lex =  $lex . ':*';
                     $sphinx_lex = $lex . '*';
                 } else {
                     $pgsql_lex = $lex;
-                    $sphinx_lex = $lex;
+                    $sphinx_lex = '"' . $lex . '"';
                 }
                 array_push($this->pgsql_result, $pgsql_lex);
                 array_push($this->sphinx_result, $sphinx_lex);
@@ -177,8 +177,8 @@ class Query
      * @param string $string
      * @return bool
      */
-    protected function hasDash(string $string) : bool
+    protected function hasSpecial(string $string) : bool
     {
-        return preg_match('/-/', $string);
+        return preg_match('/[-\/]/', $string);
     }
 }
