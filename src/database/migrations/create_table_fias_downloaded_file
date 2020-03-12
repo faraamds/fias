@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateTableFiasDownloadedFile extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('fias_downloaded_file', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->timestamp('timestamp');
+            $table->integer('vesion_id');
+            $table->string('text_version');
+            $table->string('fias_complete_xml_url');
+            $table->string('fias_delta_xml_url');
+            $table->boolean('is_imported')->default(false);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('fias_downloaded_file');
+    }
+}

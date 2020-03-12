@@ -8,6 +8,7 @@
   "require": {
     "php": ">=7.4",
     "ext-xmlreader": "*",
+    "guzzlehttp/guzzle": "^6.5",
     "laravelcollective/html": ">=5.8"
   },
   "authors": [
