@@ -3,35 +3,36 @@ CREATE OR REPLACE FUNCTION fias_address_formal_whole_history_with_count(in_aogui
 DECLARE
 
     var_name TEXT[];
-    var_aoguid UUID;
+    var_aoguids UUID[];
+    var_prev_aoguids UUID[];
     var_result TEXT;
-    var_processed_guids UUID[] := ARRAY[]::UUID[];
+    var_processed_guids UUID[] := ARRAY[in_aoguid]::UUID[];
     var_count INT := 1;
 
 BEGIN
 
-    SELECT array_agg(formalname || ' ' || shortname), min(parentguid::TEXT) INTO var_name, var_aoguid
+    SELECT array_agg(distinct formalname || ' ' || shortname), array_agg(distinct parentguid::TEXT)
+        INTO var_name, var_aoguids
         FROM fias_address_object
         WHERE aoguid=in_aoguid;
 
     var_result :=  concat('(', (SELECT string_agg(distinct n, ', ') FROM unnest(var_name) n) , ')');
-    var_processed_guids := var_processed_guids || var_aoguid;
 
-    WHILE var_aoguid IS NOT NULL
+    WHILE var_aoguids IS NOT NULL
         LOOP
+            var_prev_aoguids := var_aoguids;
 
-            SELECT array_agg(formalname || ' ' || shortname), min(parentguid::TEXT) INTO var_name, var_aoguid
+            SELECT array_agg(distinct formalname || ' ' || shortname), array_agg(distinct parentguid::TEXT)
+            INTO var_name, var_aoguids
             FROM fias_address_object
-            WHERE aoguid = var_aoguid;
+            WHERE aoguid IN (SELECT unnest(var_aoguids))
+            AND aoguid NOT IN (SELECT unnest(var_processed_guids));
 
-            var_result := concat('(', (SELECT string_agg(distinct n, ', ') FROM unnest(var_name) n) , ')', ', ', var_result);
-
-            IF ARRAY[var_aoguid]::UUID[] <@ var_processed_guids THEN
-                RAISE NOTICE 'LOOP REF IN %', var_aoguid;
-                RETURN ARRAY[var_result, var_count::TEXT]::TEXT[];
+            IF array_length(var_name, 1) > 0 THEN
+                var_result := concat((SELECT string_agg(distinct n, ', ') FROM unnest(var_name) n), ', ', var_result);
             END IF;
 
-            var_processed_guids := var_processed_guids || var_aoguid;
+            var_processed_guids := var_processed_guids || var_prev_aoguids;
             var_count := var_count + 1;
 
         END LOOP;

@@ -30,10 +30,12 @@ class FiasUpdate extends Command
      */
     protected $description = 'Update data from xml';
 
-    public function handle() : void
+    public function handle() : int
     {
         $path = $this->option('path');
 
         Fias::update($path);
+
+        return 0;
     }
 }

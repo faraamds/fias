@@ -30,10 +30,12 @@ class FiasImport extends Command
      */
     protected $description = 'Import data from xml';
 
-    public function handle() : void
+    public function handle() : int
     {
         $path = $this->option('path');
 
         Fias::import($path);
+
+        return 0;
     }
 }
