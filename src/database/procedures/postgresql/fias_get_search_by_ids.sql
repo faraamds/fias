@@ -9,7 +9,7 @@ BEGIN
     FOREACH var_id IN ARRAY in_ids
     LOOP
         SELECT fhs.aoguid, fhs.houseguid, fhs.roomguid,
-               fias_address_house_room(fhs.aoguid, to_tsquery(replace(in_check_query, ',', '')), fhs.houseguid, fhs.roomguid)
+               fias_address_house_room(fhs.aoguid, to_tsquery(trim(replace(in_check_query, ',', ''))), fhs.houseguid, fhs.roomguid)
             INTO aoguid, houseguid, roomguid, actual_address
         FROM fias_address_object_help_search fhs
         WHERE id = var_id;
