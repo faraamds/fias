@@ -161,7 +161,7 @@ class Query
      */
     protected function removeQuotes(string $string) : string
     {
-        return trim(preg_replace('/([\'",.])/', '', trim($string)));
+        return trim(preg_replace('/([\'",.()!|])/', '', trim($string)));
     }
 
     /**
