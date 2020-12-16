@@ -18,7 +18,7 @@ class CreateTableDelNormDocument extends Migration
             $table->uuid('normdocid');
             $table->text('docname')->nullable();
             $table->date('docdate')->nullable();
-            $table->string('docnum', 20)->nullable();
+            $table->string('docnum')->nullable();
             $table->integer('doctype');
             $table->uuid('docimgid')->nullable();
 

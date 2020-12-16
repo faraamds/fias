@@ -25,8 +25,8 @@ class CreateTableDelHouse extends Migration
             $table->date('updatedate');
             $table->string('housenum', 20)->nullable();
             $table->smallInteger('eststatus');
-            $table->string('buildnum', 10)->nullable();
-            $table->string('strucnum', 10)->nullable();
+            $table->string('buildnum', 50)->nullable();
+            $table->string('strucnum', 50)->nullable();
             $table->integer('strstatus')->nullable();
             $table->uuid('houseid');
             $table->uuid('houseguid');

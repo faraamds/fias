@@ -48,7 +48,7 @@ class CreateTableDelAddressObject extends Migration
             $table->integer('actstatus');
             $table->integer('centstatus');
             $table->integer('operstatus');
-            $table->integer('currstatus');
+            $table->integer('currstatus')->nullable();
             $table->date('startdate');
             $table->date('enddate');
             $table->uuid('normdoc')->nullable();
