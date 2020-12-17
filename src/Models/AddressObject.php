@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use DateTimeInterface;
 
 /**
  * Class AddressObject
@@ -117,6 +118,16 @@ class AddressObject extends Model
                                     //        2 - административно-территориальный
 
     ];
+
+    /**
+     * @param DateTimeInterface $date
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
 
     /**
      * @return string

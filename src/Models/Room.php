@@ -6,6 +6,7 @@ namespace faraamds\fias\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use DateTimeInterface;
 
 /**
  * Class Room
@@ -69,6 +70,15 @@ class Room extends Model
         'cadnum'     => 'string',    // Кадастровый номер помещения
         'roomcadnum' => 'string',    // Кадастровый номер комнаты в помещении
     ];
+
+    /**
+     * @param DateTimeInterface $date
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 
     /**
      * @return BelongsTo

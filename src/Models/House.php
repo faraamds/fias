@@ -7,6 +7,7 @@ namespace faraamds\fias\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use DateTimeInterface;
 
 /**
  * Class House
@@ -67,6 +68,16 @@ class House extends Model
                                     //    2 - административно-территориальный
         'is_last'    => 'boolean',  // Признак последней записи
     ];
+
+    /**
+     * @param DateTimeInterface $date
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
 
     /**
      * @return HasMany

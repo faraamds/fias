@@ -5,6 +5,7 @@ namespace faraamds\fias\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
 
 class DelHouseInterval extends Model
 {
@@ -19,5 +20,15 @@ class DelHouseInterval extends Model
         'id', 'postalcode', 'ifnsfl', 'terrifnsfl', 'ifnsul', 'terrifnsul', 'okato', 'oktmo', 'updatedate', 'intstart',
         'intend', 'houseintid', 'intguid', 'aoguid', 'startdate', 'enddate', 'intstatus', 'normdoc', 'counter',
         ];
+
+    /**
+     * @param DateTimeInterface $date
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
 
 }

@@ -5,6 +5,7 @@ namespace faraamds\fias\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
 
 class DelAddressObject extends Model
 {
@@ -21,6 +22,16 @@ class DelAddressObject extends Model
         'offname', 'postalcode', 'ifnsfl', 'terrifnsfl', 'ifnsul', 'terrifnsul', 'okato', 'oktmo', 'updatedate',
         'shortname', 'aolevel', 'parentguid', 'aoid', 'previd', 'nextid', 'code', 'plaincode', 'actstatus',
         'centstatus', 'operstatus', 'currstatus', 'startdate', 'enddate', 'normdoc', 'livestatus',];
+
+
+    /**
+     * @param DateTimeInterface $date
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 
 
 }
